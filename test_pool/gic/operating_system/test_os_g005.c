@@ -58,17 +58,21 @@ payload()
   }
   else {
     if (are_ns) {
+        val_print(ACS_PRINT_ERR, "\n       DEBUG GICR: are_ns : 0x%x", are_ns);
         // Read out the bottom 8 bits of GICR_ISENABLER0 if ARE_NS == 1
-        data = val_mmio_read(val_get_gicr_base(&rdbase_len) + RD_FRAME_SIZE + GICR_ISENABLER) |
-                                                                                            0xFFFF;
+        data = val_mmio_read(val_get_gicr_base(&rdbase_len) + RD_FRAME_SIZE + GICR_ISENABLER);
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Read Default GICR_ISENABLER : 0x%llx", data);
+        data = data | 0xFF;
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Writing 0x%llx to GICR_ISENABLER", data);
         val_mmio_write(val_get_gicr_base(&rdbase_len) + RD_FRAME_SIZE + GICR_ISENABLER, data);
         data = VAL_EXTRACT_BITS(val_gic_get_info(GIC_INFO_SGI_NON_SECURE), 0, 7);
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Read GICR_ISENABLER[0-7] : 0x%llx", data);
         if (data == 0xFF) {
             val_set_status(index, RESULT_PASS(TEST_NUM, 1));
             return;
         }
         else {
-            val_print(ACS_PRINT_DEBUG,
+            val_print(ACS_PRINT_ERR,
                 "\n       GICR_ISENABLER0: %X\n ", data);
             val_print(ACS_PRINT_ERR,
                 "\n       INTID 0 - 7 not implemented as non-secure SGIs", 0);
@@ -77,16 +81,21 @@ payload()
         }
     }
     else {
+        val_print(ACS_PRINT_ERR, "\n       DEBUG GICD: are_ns : 0x%x", are_ns);
         // Read out the bottom 8 bits of GICD_ISENABLER<0> if ARE == 0
-        data = (val_mmio_read(val_get_gicd_base() + GICD_ISENABLER) | 0xFFFF);
+        data = val_mmio_read(val_get_gicd_base() + GICD_ISENABLER);
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Read GICD_ISENABLER Default : 0x%llx", data);
+        data = data | 0xFF;
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Writing 0x%llx to GICD_ISENABLER", data);
         val_mmio_write((val_get_gicd_base() + GICD_ISENABLER), data);
         data = VAL_EXTRACT_BITS(val_gic_get_info(GIC_INFO_SGI_NON_SECURE_LEGACY), 0, 7);
+        val_print(ACS_PRINT_ERR, "\n       DEBUG : Read GICD_ISENABLER : 0x%llx", data);
         if (data == 0xFF) {
             val_set_status(index, RESULT_PASS(TEST_NUM, 1));
             return;
         }
         else {
-            val_print(ACS_PRINT_DEBUG,
+            val_print(ACS_PRINT_ERR,
                 "\n       GICD_IENABLER<n>: %X\n ", data);
             val_print(ACS_PRINT_ERR,
                 "\n       INTID 0 - 7 not implemented as non-secure SGIs", 0);

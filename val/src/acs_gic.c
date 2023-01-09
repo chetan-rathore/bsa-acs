@@ -233,10 +233,12 @@ val_get_gicr_base(uint32_t *rdbase_len)
   while (gic_entry->type != 0xFF) {
       if (gic_entry->type == ENTRY_TYPE_GICR_GICRD) {
               *rdbase_len = gic_entry->length;
+              val_print(ACS_PRINT_ERR, "\n       DEBUG : GICR Base from GICR_GICRD 0x%llx", gic_entry->base);
               return gic_entry->base;
       }
       if (gic_entry->type == ENTRY_TYPE_GICC_GICRD) {
               *rdbase_len = 0;
+              val_print(ACS_PRINT_ERR, "\n       DEBUG : GICR Base from GICC_GICRD 0x%llx", gic_entry->base);
               return gic_entry->base;
       }
       gic_entry++;
