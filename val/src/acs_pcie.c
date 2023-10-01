@@ -1514,9 +1514,13 @@ val_pcie_clear_urd(uint32_t bdf)
    */
   val_pcie_find_capability(bdf, PCIE_CAP, CID_PCIECS, &pciecs_base);
   val_pcie_read_cfg(bdf, pciecs_base + DCTLR_OFFSET, &reg_value);
+        val_print(ACS_PRINT_DEBUG, "    URD value is 0x%x", reg_value);
+
   reg_value &= DCTLR_MASK;
   reg_value |= (1 << (DCTLR_DSR_SHIFT + DSR_URD_SHIFT));
   val_pcie_write_cfg(bdf, pciecs_base + DCTLR_OFFSET, reg_value);
+  val_pcie_read_cfg(bdf, pciecs_base + DCTLR_OFFSET, &reg_value);
+        val_print(ACS_PRINT_DEBUG, "    URD value after write is 0x%x", reg_value);
 
 }
 
@@ -1993,34 +1997,53 @@ val_pcie_get_mmio_bar(uint32_t bdf, void *base)
   while (index < TYPE0_MAX_BARS)
   {
       /* Read the base address register at loop index */
+      val_print(ACS_PRINT_DEBUG, "\n BAR index is 0x%x", index * 4);
+
       val_pcie_read_cfg(bdf, TYPE01_BAR + index * 4, &bar_low32bits);
 
       /* Check if the BAR is Memory Mapped IO type */
       if (((bar_low32bits >> BAR_MIT_SHIFT) & BAR_MIT_MASK) == MMIO)
       {
-          /* Check if the BAR is 64-bit decodable */
+         val_print(ACS_PRINT_DEBUG, "      BAR is MMIO", 0);
+         /* Check if the BAR is 64-bit decodable */
           if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_64)
           {
+              if (((bar_low32bits >> BAR_MT_SHIFT) & BAR_MT_MASK) == 1)
+                  val_print(ACS_PRINT_DEBUG, " 64-BIT P", 0);
+              else
+                  val_print(ACS_PRINT_DEBUG, " 64-BIT NP", 0);
+
               /* Read the second sequential BAR at next index */
               val_pcie_read_cfg(bdf, TYPE01_BAR + (index + 1) * 4, &bar_high32bits);
 
               /* Fill upper 32-bits of 64-bit address with second sequential BAR */
               base_ptr[1] = bar_high32bits;
+              val_print(ACS_PRINT_DEBUG, " Upper 32-BIT addr 0x%x", base_ptr[1]);
 
               /* Adjust the index to skip next sequential BAR */
               index++;
 
           } else if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_32)
           {
+
+              if (((bar_low32bits >> BAR_MT_SHIFT) & BAR_MT_MASK) == 1)
+                  val_print(ACS_PRINT_DEBUG, " 32-BIT P", 0);
+              else
+                  val_print(ACS_PRINT_DEBUG, " 32-BIT NP", 0);
+
               /* Fill upper 32-bits of 64-bit address with zeros */
               base_ptr[1] = 0;
+              val_print(ACS_PRINT_DEBUG, " Upper 32-BIT addr 0x%x", base_ptr[1]);
+
           }
 
           /* Fill lower 32-bits of 64-bit address with first sequential BAR */
           base_ptr[0] = ((bar_low32bits >> (BAR_BASE_SHIFT) & BAR_BASE_MASK)) << BAR_BASE_SHIFT;
-
-          return;
+          val_print(ACS_PRINT_DEBUG, " Lower 32-BIT addr 0x%x", base_ptr[0]);
+//          return;
       }
+      else
+         val_print(ACS_PRINT_DEBUG, "      BAR is IO", 0);
 
       /* Adjust index to point to next BAR */
       index++;

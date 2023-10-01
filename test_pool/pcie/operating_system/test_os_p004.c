@@ -104,6 +104,7 @@ payload(void)
   uint64_t ori_mem_base = 0;
   uint64_t mem_lim = 0, new_mem_lim = 0;
   uint32_t status;
+  uint64_t base;
   pcie_device_bdf_table *bdf_tbl_ptr;
 
   tbl_index = 0;
@@ -127,10 +128,16 @@ payload(void)
   while (tbl_index < bdf_tbl_ptr->num_entries)
   {
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
+      val_print(ACS_PRINT_DEBUG, "\n      BDF: 0x%x", bdf);
+      dp_type = val_pcie_device_port_type(bdf);
+      val_print(ACS_PRINT_DEBUG, "      Type: 0x%x", dp_type);
+
       /* Enable Bus Master Enable */
       val_pcie_enable_bme(bdf);
       /* Enable Memory Space Access */
       val_pcie_enable_msa(bdf);
+      val_pcie_get_mmio_bar(bdf, &base);
+//      val_print(ACS_PRINT_DEBUG, "      BAR base is 0x%llx", base);
   }
 
   tbl_index = 0;
@@ -145,19 +152,20 @@ payload(void)
          * Check When Address is within the Range of Non-Prefetchable
          * Memory Range.
         */
+        val_print(ACS_PRINT_DEBUG, "\n     RP  BDF is 0x%x", bdf);
+
         /* Clearing UR in Device Status Register */
         val_pcie_clear_urd(bdf);
 
         /* Read Function's NP Memory Base Limit Register */
         val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n       BDF is 0x%x", bdf);
         if (read_value == 0)
           continue;
 
         mem_base = (read_value & MEM_BA_MASK) << MEM_BA_SHIFT;
         mem_lim = (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS;
 
-        val_print(ACS_PRINT_DEBUG, "\n       Memory base is 0x%llx", mem_base);
+        val_print(ACS_PRINT_DEBUG, "\n          Memory base is 0x%llx", mem_base);
         val_print(ACS_PRINT_DEBUG, " Memory lim is  0x%llx", mem_lim);
 
         /* If Memory Limit is programmed with value less the Base, then Skip.*/
