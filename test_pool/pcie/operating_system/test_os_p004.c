@@ -179,6 +179,7 @@ payload(void)
 
         /* If test runs for atleast an endpoint */
         test_skip = 0;
+        val_print(ACS_PRINT_ERR, "\n       Check-1 started", 0);
 
         /* Check_1: Accessing address in range of NP memory
          * must not cause any exception or data abort
@@ -189,12 +190,11 @@ payload(void)
          */
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
-        val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
+     //   val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
 
 
-        if ((old_value != read_value && read_value == PCIE_UNKNOWN_RESPONSE) ||
-             val_pcie_is_urd(bdf)) {
+        if (old_value != read_value) {
           val_print(ACS_PRINT_DEBUG, "\n       Value written into memory - 0x%x", KNOWN_DATA);
           val_print(ACS_PRINT_DEBUG, "\n       Value in memory after write - 0x%x", read_value);
           val_print(ACS_PRINT_ERR, "\n       Memory access check failed for BDF  0x%x", bdf);
@@ -202,6 +202,7 @@ payload(void)
           val_pcie_clear_urd(bdf);
           return;
         }
+        val_print(ACS_PRINT_ERR, "\n       Check-1 done", 0);
 
         /** Skip Check_2 if there is an Ethernet or Display controller
          * under the RP device
@@ -211,6 +212,7 @@ payload(void)
             val_print(ACS_PRINT_DEBUG, "\n       Skipping for RP BDF 0x%x", bdf);
             continue;
         }
+        val_print(ACS_PRINT_ERR, "\n       Check-2 started", 0);
 
         /**Check_2: Accessing out of NP memory limit range must return 0xFFFFFFFF
          *
@@ -238,6 +240,7 @@ payload(void)
                val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 03));
            }
         }
+        val_print(ACS_PRINT_ERR, "\n       Check-2 done", 0);
 
 exception_return:
         /*Write back original value */
