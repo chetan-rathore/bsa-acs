@@ -190,11 +190,12 @@ payload(void)
          */
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
-     //   val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
+        val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
 
 
-        if (old_value != read_value) {
+        if ((old_value != read_value && read_value == PCIE_UNKNOWN_RESPONSE) ||
+             val_pcie_is_urd(bdf)) {
           val_print(ACS_PRINT_DEBUG, "\n       Value written into memory - 0x%x", KNOWN_DATA);
           val_print(ACS_PRINT_DEBUG, "\n       Value in memory after write - 0x%x", read_value);
           val_print(ACS_PRINT_ERR, "\n       Memory access check failed for BDF  0x%x", bdf);
