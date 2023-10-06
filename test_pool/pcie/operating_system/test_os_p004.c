@@ -189,9 +189,11 @@ payload(void)
          * Read the same
          */
 
-        val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
-        val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
-        val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
+        val_pcie_bar_mem_read(bdf, mem_base  , &old_value);
+        val_print(ACS_PRINT_ERR, "\n       old value %x", old_value);
+        val_pcie_bar_mem_write(bdf, mem_base  , KNOWN_DATA);
+        val_pcie_bar_mem_read(bdf, mem_base , &read_value);
+        val_print(ACS_PRINT_ERR, "\n       old value %x", read_value);
 
 
         if ((old_value != read_value && read_value == PCIE_UNKNOWN_RESPONSE) ||
