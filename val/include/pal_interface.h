@@ -401,6 +401,8 @@ uint32_t pal_pcie_mem_get_offset(uint32_t type);
 
 uint32_t pal_pcie_bar_mem_read(uint32_t bdf, uint64_t address, uint32_t *data);
 uint32_t pal_pcie_bar_mem_write(uint32_t bdf, uint64_t address, uint32_t data);
+void pal_pcie_print_config(uint32_t bdf);
+
 /**
   @brief  Instance of SMMU INFO block
 **/

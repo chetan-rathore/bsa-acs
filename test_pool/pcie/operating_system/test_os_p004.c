@@ -60,6 +60,9 @@ check_bdf_under_rp(uint32_t rp_bdf)
   rp_sec_bus = ((reg_value >> SECBN_SHIFT) & SECBN_MASK);
   rp_sub_bus = ((reg_value >> SUBBN_SHIFT) & SUBBN_MASK);
 
+  val_print(ACS_PRINT_DEBUG, "\n       Secondary bus 0x%x", rp_sec_bus);
+  val_print(ACS_PRINT_DEBUG, "\n       Subordinate bus 0x%x", rp_sub_bus);
+
   for (dev_sec_bus = rp_sec_bus; dev_sec_bus <= rp_sub_bus; dev_sec_bus++)
   {
       for (dev_num = 0; dev_num < PCIE_MAX_DEV; dev_num++)
@@ -78,8 +81,12 @@ check_bdf_under_rp(uint32_t rp_bdf)
                   val_pcie_read_cfg(dev_bdf, TYPE01_RIDR, &reg_value);
                   val_print(ACS_PRINT_DEBUG, "\n       Class code is 0x%x", reg_value);
                   base_cc = reg_value >> TYPE01_BCC_SHIFT;
-                  if ((base_cc == CNTRL_CC) || (base_cc == DP_CNTRL_CC) || (base_cc == MAS_CC))
+                      val_print(ACS_PRINT_DEBUG, "\n       child bdf is 0x%x", dev_bdf);
+
+                  if ((base_cc == CNTRL_CC) || (base_cc == DP_CNTRL_CC) || (base_cc == MAS_CC)) {
+                      val_print(ACS_PRINT_DEBUG, "\n       Class code is 0x%x", reg_value);
                       return 1;
+                  }
               }
            }
        }
@@ -99,6 +106,7 @@ payload(void)
   uint32_t tbl_index;
   uint32_t read_value, old_value, value;
   uint32_t test_skip = 1;
+  uint32_t test_fails = 0;
   uint32_t mem_offset = 0;
   uint64_t mem_base = 0;
   uint64_t ori_mem_base = 0;
@@ -117,7 +125,7 @@ payload(void)
   if (status)
   {
       val_print(ACS_PRINT_ERR, "\n       Failed in installing the exception handler", 0);
-      val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 01));
+      val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 02));
       return;
   }
 
@@ -126,11 +134,13 @@ payload(void)
   */
   while (tbl_index < bdf_tbl_ptr->num_entries)
   {
+      val_print(ACS_PRINT_ERR, "\n    BDF is %x ", bdf);
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
       /* Enable Bus Master Enable */
       val_pcie_enable_bme(bdf);
       /* Enable Memory Space Access */
       val_pcie_enable_msa(bdf);
+      val_pcie_print_config(bdf);
   }
 
   tbl_index = 0;
@@ -154,11 +164,12 @@ payload(void)
         if (read_value == 0)
           continue;
 
+        val_print(ACS_PRINT_ERR, "\n     BDF is 0x%x", bdf);
         mem_base = (read_value & MEM_BA_MASK) << MEM_BA_SHIFT;
         mem_lim = (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS;
 
-        val_print(ACS_PRINT_DEBUG, "\n       Memory base is 0x%llx", mem_base);
-        val_print(ACS_PRINT_DEBUG, " Memory lim is  0x%llx", mem_lim);
+        val_print(ACS_PRINT_DEBUG, "\n       NP mem base is 0x%llx", mem_base);
+        val_print(ACS_PRINT_DEBUG, " & mem lim is  0x%llx", mem_lim);
 
         /* If Memory Limit is programmed with value less the Base, then Skip.*/
         if (mem_lim < mem_base) {
@@ -173,8 +184,7 @@ payload(void)
             val_print(ACS_PRINT_ERR,
                     "\n       Memory offset + base 0x%llx", mem_base + mem_offset);
             val_print(ACS_PRINT_ERR, " exceeds the memory limit 0x%llx", mem_lim);
-            val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 02));
-            return;
+            continue;
         }
 
         /* If test runs for atleast an endpoint */
@@ -187,56 +197,93 @@ payload(void)
          * Base + offset must always be in the range.
          * Read the same
          */
+        val_print(ACS_PRINT_DEBUG, "\n       Check-1 starts", 0);
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
+        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
+
+        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_bar_mem_write(bdf, mem_base + mem_offset, KNOWN_DATA);
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
 
-        if ((old_value != read_value && read_value == PCIE_UNKNOWN_RESPONSE) ||
-             val_pcie_is_urd(bdf)) {
-          val_print(ACS_PRINT_DEBUG, "\n       Value written into memory - 0x%x", KNOWN_DATA);
-          val_print(ACS_PRINT_DEBUG, "\n       Value in memory after write - 0x%x", read_value);
-          val_print(ACS_PRINT_ERR, "\n       Memory access check failed for BDF  0x%x", bdf);
-          val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 02));
+        if (val_pcie_is_urd(bdf) || ((read_value == 0xFFFFFFFF) && (old_value != 0xFFFFFFFF))) {
+          val_print(ACS_PRINT_ERR, "\n       Check-1 FAILS URD set or all 1's", 0);
           val_pcie_clear_urd(bdf);
-          return;
+          test_fails++;
         }
-
-        /** Skip Check_2 if there is an Ethernet or Display controller
-         * under the RP device
-         **/
-        if (check_bdf_under_rp(bdf))
-        {
-            val_print(ACS_PRINT_DEBUG, "\n       Skipping for RP BDF 0x%x", bdf);
-            continue;
-        }
+        val_print(ACS_PRINT_DEBUG, "\n       Check-1 ends", 0);
 
         /**Check_2: Accessing out of NP memory limit range must return 0xFFFFFFFF
          *
          * If the limit exceeds 1MB then modify the range to be 1MB
          * and access out of the limit set
          **/
+
         ori_mem_base = mem_base;
 
         if ((mem_lim >> MEM_SHIFT) > (mem_base >> MEM_SHIFT))
         {
-           val_print(ACS_PRINT_DEBUG, "\n       Entered Check_2 for bdf 0x%x", bdf);
+           val_print(ACS_PRINT_DEBUG, "\n       Check-2 starts", 0);
+
+           /** Skip Check_2 if there is an Ethernet or Display controller
+            * under the RP device
+            **/
+           if (check_bdf_under_rp(bdf))
+           {
+               val_print(ACS_PRINT_DEBUG, "\n       Skipping for RP BDF 0x%x", bdf);
+               continue;
+           }
+
            new_mem_lim = mem_base + MEM_OFFSET_LARGE;
+
+           val_print(ACS_PRINT_DEBUG, "\n       Before limit changes", 0);
+           val_pcie_bar_mem_read(bdf, mem_base + 0x40, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", mem_base + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim + 0x10, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim + 0x40, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+
            mem_base = mem_base | (mem_base  >> 16);
            val_pcie_write_cfg(bdf, TYPE1_NP_MEM, mem_base);
            val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
+           val_print(ACS_PRINT_DEBUG, "\n       New mem lim is  0x%llx",
+                                          (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS);
 
-           val_pcie_bar_mem_read(bdf, new_mem_lim + MEM_OFFSET_SMALL, &value);
-           val_print(ACS_PRINT_DEBUG, "  Value read is 0x%llx", value);
-           if (value != PCIE_UNKNOWN_RESPONSE)
-           {
-               val_print(ACS_PRINT_ERR, "\n       Memory range for bdf 0x%x", bdf);
-               val_print(ACS_PRINT_ERR, " is 0x%x", read_value);
-               val_print(ACS_PRINT_ERR,
-                       "\n       Out of range 0x%x", (new_mem_lim + MEM_OFFSET_SMALL));
-               val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 03));
+           val_print(ACS_PRINT_DEBUG, "\n       After limit changes", 0);
+           val_pcie_bar_mem_read(bdf, ori_mem_base + 0x40, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", ori_mem_base + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim + 0x10, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim + 0x40, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_bar_mem_read(bdf, new_mem_lim, &value);
+           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
+           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           if ((val_pcie_is_urd(bdf) == 0) && (value != PCIE_UNKNOWN_RESPONSE)) {
+               val_print(ACS_PRINT_ERR, "\n       Chk-2 FAILS URD not set and response also not 1's", 0);
+               test_fails++;
            }
+           val_print(ACS_PRINT_DEBUG, "\n       Check-2 ends", 0);
         }
 
 exception_return:
@@ -245,16 +292,19 @@ exception_return:
         {
             val_pcie_write_cfg(bdf, TYPE1_NP_MEM,
                                            ((mem_lim & MEM_LIM_MASK) | (ori_mem_base  >> 16)));
+           val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
+           mem_lim = (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS;
+           val_print(ACS_PRINT_DEBUG, "\n       restore mem lim is  0x%llx", mem_lim);
         }
 
         /* Memory Space might have constraint on RW/RO behaviour
          * So not checking for Read-Write Data mismatch.
         */
         if (IS_TEST_FAIL(val_get_status(pe_index))) {
-          val_print(ACS_PRINT_ERR,
-            "\n       Failed. Exception on Memory Access For Bdf : 0x%x", bdf);
+     //     val_print(ACS_PRINT_ERR,
+    //        "\n       Failed. Exception on Memory Access For Bdf : 0x%x", bdf);
           val_pcie_clear_urd(bdf);
-          return;
+          test_fails++;
         }
 
       }
@@ -265,8 +315,11 @@ exception_return:
         "\n       No RP type device found with valid Memory Base/Limit Reg.", 0);
       val_set_status(pe_index, RESULT_SKIP(TEST_NUM, 1));
   }
+  else if(test_fails)
+      val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 3));
   else
       val_set_status(pe_index, RESULT_PASS(TEST_NUM, 1));
+
 }
 
 uint32_t

@@ -35,6 +35,115 @@
 #include "include/bsa_pcie_enum.h"
 
 static EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER *gMcfgHdr;
+#define ACPI_ADDRESS_TYPE_MEM 0x00
+#define __bswap_constant_16( value )					\
+	( ( ( (value) & 0x00ff ) << 8 ) |				\
+	  ( ( (value) & 0xff00 ) >> 8 ) )
+#define __leNN_to_cpu( bits, value ) (value)
+#define le16_to_cpu( value ) __leNN_to_cpu ( 16, value )
+struct acpi_small_resource {
+	/** Tag byte */
+	UINT8 tag;
+} __attribute__ (( packed ));
+
+/** ACPI small resource length mask */
+#define ACPI_SMALL_LEN_MASK 0x03
+
+/** An ACPI end resource descriptor */
+#define ACPI_END_RESOURCE 0x78
+
+/** An ACPI end resource descriptor */
+struct acpi_end_resource {
+	/** Header */
+	struct acpi_small_resource hdr;
+	/** Checksum */
+	UINT8 checksum;
+} __attribute__ (( packed ));
+
+/** An ACPI large resource descriptor header */
+struct acpi_large_resource {
+	/** Tag byte */
+	UINT8 tag;
+	/** Length of data items */
+	UINT16 len;
+} __attribute__ (( packed ));
+
+/** ACPI large resource flag */
+#define ACPI_LARGE 0x80
+
+/** An ACPI QWORD address space resource descriptor */
+#define ACPI_QWORD_ADDRESS_SPACE_RESOURCE 0x8a
+
+/** An ACPI QWORD address space resource descriptor */
+struct acpi_qword_address_space_resource {
+	/** Header */
+	struct acpi_large_resource hdr;
+	/** Resource type */
+	UINT8 type;
+	/** General flags */
+	UINT8 general;
+	/** Type-specific flags */
+	UINT8 specific;
+	/** Granularity */
+	UINT64 granularity;
+	/** Minimum address */
+	UINT64 min;
+	/** Maximum address */
+	UINT64 max;
+	/** Translation offset */
+	UINT64 offset;
+	/** Length */
+	UINT64 len;
+} __attribute__ (( packed ));
+
+/** An ACPI resource descriptor */
+union acpi_resource {
+	/** Tag byte */
+	UINT8 tag;
+	/** Small resource descriptor */
+	struct acpi_small_resource small;
+	/** End resource descriptor */
+	struct acpi_end_resource end;
+	/** Large resource descriptor */
+	struct acpi_large_resource large;
+	/** QWORD address space resource descriptor */
+	struct acpi_qword_address_space_resource qword;
+};
+
+unsigned long int acpi_small_len ( struct acpi_small_resource *res ) {
+
+	return ( sizeof ( *res ) + ( res->tag & ACPI_SMALL_LEN_MASK ) );
+}
+
+/**
+ * Get length of ACPI large resource descriptor
+ *
+ * @v res		Large resource descriptor
+ * @ret len		Length of descriptor
+ */
+unsigned long int acpi_large_len ( struct acpi_large_resource *res ) {
+
+	return ( sizeof ( *res ) + le16_to_cpu ( res->len ) );
+}
+
+/**
+ * Get length of ACPI resource descriptor
+ *
+ * @v res		ACPI resource descriptor
+ * @ret len		Length of descriptor
+ */
+unsigned long int acpi_resource_len ( union acpi_resource *res ) {
+
+	return ( ( res->tag & ACPI_LARGE ) ?
+		 acpi_large_len ( &res->large ) :
+		 acpi_small_len ( &res->small ) );
+}
+
+static inline union acpi_resource *
+acpi_resource_next ( union acpi_resource *res ) {
+
+	return ( ( ( void * ) res ) + acpi_resource_len ( res ) );
+}
 
 UINT64
 pal_get_mcfg_ptr();
@@ -316,6 +425,73 @@ pal_pcie_bar_mem_write(UINT32 Bdf, UINT64 address, UINT32 data)
   pal_mem_free(HandleBuffer);
   return PCIE_NO_MAPPING;
 }
+
+VOID
+pal_pcie_print_config(UINT32 Bdf)
+{
+
+  EFI_STATUS                       Status;
+  EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL  *Pci;
+  UINTN                            HandleCount;
+  EFI_HANDLE                       *HandleBuffer;
+  UINT32                           Index;
+  UINT32                           InputSeg;
+  UINT32                           tag;
+
+
+  Status = gBS->LocateHandleBuffer (ByProtocol, &gEfiPciRootBridgeIoProtocolGuid, NULL, &HandleCount, &HandleBuffer);
+  if (EFI_ERROR (Status)) {
+    bsa_print(ACS_PRINT_ERR,L" No Root Bridge found in the system\n");
+    //return PCIE_NO_MAPPING;
+  }
+
+  InputSeg = PCIE_EXTRACT_BDF_SEG(Bdf);
+
+  union {
+     union acpi_resource *res;
+     void *raw;
+  } u;
+
+unsigned int acpi_resource_tag ( union acpi_resource *res ) {
+
+	return ( ( res->tag & ACPI_LARGE ) ?
+		 res->tag : ( res->tag & ~ACPI_SMALL_LEN_MASK ) );
+}
+  for (Index = 0; Index < HandleCount; Index++) {
+    Status = gBS->HandleProtocol (HandleBuffer[Index], &gEfiPciRootBridgeIoProtocolGuid, (VOID **)&Pci);
+    if (!EFI_ERROR (Status)) {
+      if (Pci->SegmentNumber == InputSeg) {
+        Status = Pci->Configuration (Pci, &u.raw);
+        if (!EFI_ERROR(Status)) {
+
+	/* Parse resource descriptors */
+	for ( ; ( ( tag = acpi_resource_tag ( u.res ) ) != ACPI_END_RESOURCE ) ;
+	      u.res = acpi_resource_next ( u.res ) ) {
+
+		/* Ignore anything other than a memory range descriptor */
+		if ( tag != ACPI_QWORD_ADDRESS_SPACE_RESOURCE )
+			continue;
+		if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
+			continue;
+
+
+    bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
+    bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
+    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
+    bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
+    //bsa_print(ACS_PRINT_ERR,L" mapping 0x%llx\n", ioremap((u.res->qword.min + u.res->qword.offset), u.res->qword.len ));
+
+        }
+        }
+        //pal_mem_free(HandleBuffer[Index]);
+      }
+    }
+  }
+
+  pal_mem_free(HandleBuffer);
+  return;
+}
+
 
 /**
   @brief   This API checks the PCIe Hierarchy Supports P2P

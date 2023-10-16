@@ -161,7 +161,7 @@ uint64_t val_pcie_get_bdf_config_addr(uint32_t bdf);
 
 uint32_t val_pcie_bar_mem_read(uint32_t bdf, uint64_t address, uint32_t *data);
 uint32_t val_pcie_bar_mem_write(uint32_t bdf, uint64_t address, uint32_t data);
-
+void val_pcie_print_mmio_bar(uint32_t bdf);
 typedef enum {
   PCIE_INFO_NUM_ECAM = 1,
   PCIE_INFO_ECAM,
@@ -224,6 +224,9 @@ val_is_transaction_pending_set(uint32_t bdf);
 
 uint32_t
 val_pcie_data_link_layer_status(uint32_t bdf);
+
+void
+val_pcie_print_config(uint32_t bdf);
 
 uint32_t os_p001_entry(uint32_t num_pe);
 uint32_t os_p002_entry(uint32_t num_pe);
