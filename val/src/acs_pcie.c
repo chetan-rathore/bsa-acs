@@ -597,16 +597,17 @@ static uint32_t val_pcie_populate_device_rootport(void)
   bdf_tbl_ptr = val_pcie_bdf_table_ptr();
   tbl_index = 0;
 
+  val_print(ACS_PRINT_DEBUG, "\n", 0);
   for (tbl_index = 0; tbl_index < bdf_tbl_ptr->num_entries; tbl_index++)
   {
       bdf = bdf_tbl_ptr->device[tbl_index].bdf;
-      val_print(ACS_PRINT_DEBUG, "  Dev bdf 0x%06x", bdf);
+      val_print(ACS_PRINT_DEBUG, "  Dev bdf 0x%x", bdf);
 
       /* Checks if the BDF has RootPort */
       val_pcie_get_rootport(bdf, &rp_bdf);
 
       bdf_tbl_ptr->device[tbl_index].rp_bdf = rp_bdf;
-      val_print(ACS_PRINT_DEBUG, " RP bdf 0x%06x\n", rp_bdf);
+      val_print(ACS_PRINT_DEBUG, " RP bdf 0x%x\n", rp_bdf);
   }
   return 0;
 }
@@ -682,16 +683,15 @@ val_pcie_create_device_bdf_table()
                   if (val_pcie_read_cfg(bdf, TYPE01_VIDR, &reg_value) == PCIE_NO_MAPPING)
                   {
                       /* Return if there is a bdf mapping issue */
-                      val_print(ACS_PRINT_ERR, "\n       BDF 0x%x mapping issue", bdf);
+                      val_print(ACS_PRINT_ERR, "       BDF 0x%x mapping issue", bdf);
                       return 1;
                   }
 
                   /* Store the Function's BDF if there was a valid response */
                   if (reg_value != PCIE_UNKNOWN_RESPONSE)
                   {
-                      /* Skip if the device is a host bridge */
-                      if (val_pcie_is_host_bridge(bdf))
-                          continue;
+                      val_print(ACS_PRINT_DEBUG, "\n       Processing BDF 0x%x ", bdf);
+                      val_print(ACS_PRINT_DEBUG, "  V_d ID 0x%x ", reg_value);
 
 #ifndef TARGET_LINUX
                       /* Enable memory access and bus master enable for all BDF's
@@ -702,30 +702,47 @@ val_pcie_create_device_bdf_table()
                       val_pcie_enable_msa(bdf);
 #endif
 
-                      /* Skip if the device is a PCI legacy device */
-                      p_cap = val_pcie_find_capability(
-                        bdf,
-                        PCIE_CAP,
-                        CID_PCIECS,
-                        &cid_offset);
+                      if (val_pcie_get_device_type(bdf) == 1) {
+                          val_print(ACS_PRINT_DEBUG, "  Type0", 0);
+                      }
+                      else {
+                          val_print(ACS_PRINT_DEBUG, "  Type1", 0);
+                      }
 
-                      if (p_cap != PCIE_SUCCESS)
+                      /* Skip if the device is a host bridge */
+                      if (val_pcie_is_host_bridge(bdf)) {
+                          val_print(ACS_PRINT_DEBUG, "   Host bridge", 0);
+                          val_pcie_print_mmio_bar(bdf);
                           continue;
+                      }
+
+                      /* Skip if the device is a PCI legacy device */
+                      p_cap = val_pcie_find_capability(bdf, PCIE_CAP, CID_PCIECS, &cid_offset);
+
+                      if (p_cap != PCIE_SUCCESS) {
+                          val_print(ACS_PRINT_DEBUG, "  Legacy device", 0);
+                          val_pcie_print_mmio_bar(bdf);
+                          continue;
+                      }
 
                       dp_type = val_pcie_device_port_type(bdf);
 
                       /* RCiEP rules are for SBSA L6 */
-                      if ((dp_type == RCiEP) || (dp_type == RCEC))
+                      if ((dp_type == RCiEP) || (dp_type == RCEC)) {
+                          val_print(ACS_PRINT_DEBUG, "  integrated device", 0);
+                          val_pcie_print_mmio_bar(bdf);
                           continue;
-
+                      }
                       /* iEP rules are for SBSA L6 */
-                      if ((dp_type == iEP_EP) || (dp_type == iEP_RP))
+                      if ((dp_type == iEP_EP) || (dp_type == iEP_RP)) {
+                          val_print(ACS_PRINT_DEBUG, "       integrated device", 0);
+                          val_pcie_print_mmio_bar(bdf);
                           continue;
-
+                      }
                       status = pal_pcie_check_device_valid(bdf);
                       if (status)
                           continue;
-
+                      val_pcie_print_mmio_bar(bdf);
                       g_pcie_bdf_table->device[g_pcie_bdf_table->num_entries++].bdf = bdf;
                   }
               }
@@ -1473,6 +1490,12 @@ val_pcie_enable_msa(uint32_t bdf)
 
 }
 
+void val_pcie_print_config(uint32_t bdf)
+{
+    pal_pcie_print_config(bdf);
+}
+
+
 /**
   @brief  Reads the BAR memory space access in the command register.
 
@@ -1488,6 +1511,7 @@ val_pcie_is_msa_enabled(uint32_t bdf)
 
   /* Enable MSE bit in Command Register to enable BAR memory space accesses */
   val_pcie_read_cfg(bdf, TYPE01_CR, &reg_value);
+  val_print(ACS_PRINT_DEBUG, "\n       reg_value %x", reg_value);
   reg_value &= (1 << CR_MSE_SHIFT);
   if (reg_value)
       return 0;
@@ -1955,6 +1979,123 @@ val_pcie_function_header_type(uint32_t bdf)
   return ((reg_value >> HTR_HL_SHIFT) & HTR_HL_MASK);
 }
 
+void
+val_pcie_print_mmio_bar(uint32_t bdf)
+{
+  uint32_t index;
+  uint32_t bar_low32bits, read_value;
+  uint32_t bar_high32bits, bar_lower_bits;
+  uint64_t mem_base, mem_base_upper, mem_lim, mem_lim_upper;
+  uint64_t bar_size, bar_upper_bits;
+  index = 0;
+  while (index < TYPE0_MAX_BARS) {
+      /* Read the base address register at loop index */
+      val_pcie_read_cfg(bdf, TYPE01_BAR + index * 4, &bar_low32bits);
+      val_print(ACS_PRINT_INFO, "\n         BAR%d", index * 4);
+
+      /* Check if the BAR is Memory Mapped IO type */
+      if (((bar_low32bits >> BAR_MIT_SHIFT) & BAR_MIT_MASK) == MMIO) {
+          /* Check if the BAR is 64-bit decodable */
+          if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_64) {
+              /* Extract pref type */
+              if (VAL_EXTRACT_BITS(bar_low32bits, 3, 3))
+                  val_print(ACS_PRINT_INFO, " P  MMIO", 0);
+              else
+                  val_print(ACS_PRINT_INFO, " NP MMIO", 0);
+
+              /* Read the second sequential BAR at next index */
+              val_pcie_read_cfg(bdf, TYPE01_BAR + (index + 1) * 4, &bar_high32bits);
+
+              /* Fill upper 32-bits of 64-bit address with second sequential BAR */
+        //      val_print(ACS_PRINT_INFO, "  upper 32addr 0x%x", bar_high32bits);
+              /* Adjust the index to skip next sequential BAR */
+
+              /* Fill lower 32-bits of 64-bit address with first sequential BAR */
+              mem_base = bar_high32bits;
+              mem_base = (((bar_low32bits >> (BAR_BASE_SHIFT) & BAR_BASE_MASK)) << BAR_BASE_SHIFT) | (mem_base << 32);
+              val_print(ACS_PRINT_INFO, "  64addr 0x%llx", mem_base);
+
+              val_pcie_write_cfg(bdf, TYPE01_BAR + index * 4, 0xFFFFFFF0);
+              val_pcie_write_cfg(bdf, TYPE01_BAR + (index + 1) * 4, 0xFFFFFFFF);
+
+              val_pcie_read_cfg(bdf, TYPE01_BAR + index * 4, &bar_lower_bits);
+              bar_size = bar_lower_bits & BAR_MASK;
+              val_pcie_read_cfg(bdf, TYPE01_BAR + (index + 1) * 4, &bar_lower_bits);
+              bar_upper_bits = bar_lower_bits;
+              bar_size = bar_size | (bar_upper_bits << 32 );
+              bar_size = ~bar_size + 1;
+              val_print(ACS_PRINT_INFO, "  size 0x%llx", bar_size);
+
+              val_pcie_write_cfg(bdf, TYPE01_BAR + index * 4, bar_low32bits);
+              val_pcie_write_cfg(bdf, TYPE01_BAR + (index + 1) * 4, bar_high32bits);
+
+              index++;
+          } else if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_32) {
+              /* Extract pref type */
+              if (VAL_EXTRACT_BITS(bar_low32bits, 3, 3))
+                  val_print(ACS_PRINT_INFO, " P  MMIO", 0);
+              else
+                  val_print(ACS_PRINT_INFO, " NP MMIO", 0);
+
+              /* Fill lower 32-bits of 64-bit address with first sequential BAR */
+              val_print(ACS_PRINT_INFO, "  32addr 0x%x",
+                        ((bar_low32bits >> (BAR_BASE_SHIFT) & BAR_BASE_MASK)) << BAR_BASE_SHIFT);
+
+              val_pcie_write_cfg(bdf, TYPE01_BAR + index * 4, 0xFFFFFFF0);
+
+              val_pcie_read_cfg(bdf, TYPE01_BAR + index * 4, &bar_lower_bits);
+              val_print(ACS_PRINT_INFO, "  size 0x%x", ~(bar_lower_bits & BAR_MASK) + 1);
+
+              val_pcie_write_cfg(bdf, TYPE01_BAR + index * 4, bar_low32bits);
+          }
+
+      } else
+              val_print(ACS_PRINT_INFO, " IO", 0);
+
+      /* Adjust index to point to next BAR */
+      index++;
+
+       /* Functions that implement Type 1 configuration header are limited by two BARs.
+       * Terminate the search after index reaches max Type 1 BARs. The header layout bits
+       * in header type register provide the type of the configuration header.
+       */
+      if ((val_pcie_function_header_type(bdf) == TYPE1_HEADER) && (index == TYPE1_MAX_BARS))
+          break;
+  }
+
+  if (val_pcie_function_header_type(bdf)) {
+        /* Read Function's NP Memory Base Limit Register */
+        val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
+
+        val_print(ACS_PRINT_DEBUG, "\n         NP mem base is 0x%llx",
+                                       (read_value & MEM_BA_MASK) << MEM_BA_SHIFT);
+        val_print(ACS_PRINT_DEBUG, " & mem lim is  0x%llx",
+                               (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS);
+
+        /* Read Function's Memory Base Limit Register */
+        val_pcie_read_cfg(bdf, TYPE1_P_MEM, &read_value);
+
+        mem_base = (read_value & MEM_BA_MASK) << MEM_BA_SHIFT;
+        mem_lim = (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS;
+
+        /* If 64 Bit Prefetchable Address */
+        if ((read_value & P_MEM_PAC_MASK) == 0x1) {
+          val_pcie_read_cfg(bdf, TYPE1_P_MEM_BU, &read_value);
+          mem_base_upper = read_value;
+          val_pcie_read_cfg(bdf, TYPE1_P_MEM_LU, &read_value);
+          mem_lim_upper = read_value;
+        }
+
+        mem_base |= (mem_base_upper << P_MEM_BU_SHIFT);
+        mem_lim |= (mem_lim_upper << P_MEM_LU_SHIFT);
+
+        val_print(ACS_PRINT_DEBUG, "\n         P Memory base is 0x%llx", mem_base);
+        val_print(ACS_PRINT_DEBUG, " Memory lim is  0x%llx", mem_lim);
+
+
+  }
+}
+
 /**
   @brief  Returns physical address of the first MMIO Base Address Register
 
@@ -1995,12 +2136,15 @@ val_pcie_get_mmio_bar(uint32_t bdf, void *base)
       /* Read the base address register at loop index */
       val_pcie_read_cfg(bdf, TYPE01_BAR + index * 4, &bar_low32bits);
 
+      val_print(ACS_PRINT_INFO, "\n       BAR%d", index * 4);
       /* Check if the BAR is Memory Mapped IO type */
       if (((bar_low32bits >> BAR_MIT_SHIFT) & BAR_MIT_MASK) == MMIO)
       {
           /* Check if the BAR is 64-bit decodable */
           if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_64)
           {
+              val_print(ACS_PRINT_INFO, "MMIO 64 bit", 0);
+
               /* Read the second sequential BAR at next index */
               val_pcie_read_cfg(bdf, TYPE01_BAR + (index + 1) * 4, &bar_high32bits);
 
@@ -2012,15 +2156,20 @@ val_pcie_get_mmio_bar(uint32_t bdf, void *base)
 
           } else if (((bar_low32bits >> BAR_MDT_SHIFT) & BAR_MDT_MASK) == BITS_32)
           {
+              val_print(ACS_PRINT_INFO, "MMIO 32 bit", 0);
               /* Fill upper 32-bits of 64-bit address with zeros */
               base_ptr[1] = 0;
           }
 
           /* Fill lower 32-bits of 64-bit address with first sequential BAR */
           base_ptr[0] = ((bar_low32bits >> (BAR_BASE_SHIFT) & BAR_BASE_MASK)) << BAR_BASE_SHIFT;
+ //         val_print(ACS_PRINT_INFO, "lower 32 bit addr", base_ptr[0]);
+ //         val_print(ACS_PRINT_INFO, "upper 32 bit addr", base_ptr[1]);
 
           return;
-      }
+      } else
+              val_print(ACS_PRINT_INFO, "IO", 0);
+
 
       /* Adjust index to point to next BAR */
       index++;
