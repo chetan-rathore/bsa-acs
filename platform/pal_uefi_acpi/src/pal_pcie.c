@@ -32,7 +32,13 @@
 
 #include "../include/platform_override.h"
 #include "include/pal_uefi.h"
+#include  <include/bsa_pcie_enum.h>
 #include "include/bsa_pcie_enum.h"
+
+VOID
+pal_mmio_write(UINT64 addr, UINT32 data);
+UINT32
+pal_mmio_read(UINT64 addr);
 
 static EFI_ACPI_MEMORY_MAPPED_CONFIGURATION_BASE_ADDRESS_TABLE_HEADER *gMcfgHdr;
 #define ACPI_ADDRESS_TYPE_MEM 0x00
@@ -492,6 +498,144 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
   return;
 }
 
+VOID
+pal_pcie_write_config(UINT32 Bdf, UINT64 address, UINT32 data)
+{
+  EFI_STATUS                       Status;
+  EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL  *Pci;
+  UINTN                            HandleCount;
+  EFI_HANDLE                       *HandleBuffer;
+  UINT32                           Index;
+  UINT32                           InputSeg;
+  UINT32                           tag;
+
+
+  Status = gBS->LocateHandleBuffer (ByProtocol, &gEfiPciRootBridgeIoProtocolGuid, NULL, &HandleCount, &HandleBuffer);
+  if (EFI_ERROR (Status)) {
+    bsa_print(ACS_PRINT_ERR,L" No Root Bridge found in the system\n");
+    //return PCIE_NO_MAPPING;
+  }
+
+  InputSeg = PCIE_EXTRACT_BDF_SEG(Bdf);
+
+  union {
+     union acpi_resource *res;
+     void *raw;
+  } u;
+
+unsigned int acpi_resource_tag ( union acpi_resource *res ) {
+
+	return ( ( res->tag & ACPI_LARGE ) ?
+		 res->tag : ( res->tag & ~ACPI_SMALL_LEN_MASK ) );
+}
+  for (Index = 0; Index < HandleCount; Index++) {
+    Status = gBS->HandleProtocol (HandleBuffer[Index], &gEfiPciRootBridgeIoProtocolGuid, (VOID **)&Pci);
+    if (!EFI_ERROR (Status)) {
+      if (Pci->SegmentNumber == InputSeg) {
+        Status = Pci->Configuration (Pci, &u.raw);
+        if (!EFI_ERROR(Status)) {
+
+	/* Parse resource descriptors */
+	for ( ; ( ( tag = acpi_resource_tag ( u.res ) ) != ACPI_END_RESOURCE ) ;
+	      u.res = acpi_resource_next ( u.res ) ) {
+
+		/* Ignore anything other than a memory range descriptor */
+		if ( tag != ACPI_QWORD_ADDRESS_SPACE_RESOURCE )
+			continue;
+		if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
+			continue;
+
+    
+
+    bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
+    bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
+    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
+    bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
+    address = address +  u.res->qword.offset;
+    bsa_print(ACS_PRINT_ERR,L" address to which data is written 0x%llx\n", address);
+    pal_mmio_write(address, data);
+    break;
+
+        }
+        }
+        //pal_mem_free(HandleBuffer[Index]);
+      }
+    }
+  }
+
+  pal_mem_free(HandleBuffer);
+  return ;
+}
+
+UINT32
+pal_pcie_read_config(UINT32 Bdf, UINT64 address, UINT32 *data1)
+{
+  EFI_STATUS                       Status;
+  EFI_PCI_ROOT_BRIDGE_IO_PROTOCOL  *Pci;
+  UINTN                            HandleCount;
+  EFI_HANDLE                       *HandleBuffer;
+  UINT32                           Index;
+  UINT32                           InputSeg;
+  UINT32                           tag;
+
+
+  Status = gBS->LocateHandleBuffer (ByProtocol, &gEfiPciRootBridgeIoProtocolGuid, NULL, &HandleCount, &HandleBuffer);
+  if (EFI_ERROR (Status)) {
+    bsa_print(ACS_PRINT_ERR,L" No Root Bridge found in the system\n");
+    return PCIE_NO_MAPPING;
+  }
+
+  InputSeg = PCIE_EXTRACT_BDF_SEG(Bdf);
+
+  union {
+     union acpi_resource *res;
+     void *raw;
+  } u;
+
+unsigned int acpi_resource_tag ( union acpi_resource *res ) {
+
+	return ( ( res->tag & ACPI_LARGE ) ?
+		 res->tag : ( res->tag & ~ACPI_SMALL_LEN_MASK ) );
+}
+  for (Index = 0; Index < HandleCount; Index++) {
+    Status = gBS->HandleProtocol (HandleBuffer[Index], &gEfiPciRootBridgeIoProtocolGuid, (VOID **)&Pci);
+    if (!EFI_ERROR (Status)) {
+      if (Pci->SegmentNumber == InputSeg) {
+        Status = Pci->Configuration (Pci, &u.raw);
+        if (!EFI_ERROR(Status)) {
+
+	/* Parse resource descriptors */
+	    for ( ; ( ( tag = acpi_resource_tag ( u.res ) ) != ACPI_END_RESOURCE ) ;
+	          u.res = acpi_resource_next ( u.res ) ) {
+
+	    	/* Ignore anything other than a memory range descriptor */
+	    	if ( tag != ACPI_QWORD_ADDRESS_SPACE_RESOURCE )
+	    		continue;
+	    	if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
+	    		continue;
+
+    
+
+             bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
+             bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
+             bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
+             bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
+             address = address +  u.res->qword.offset;
+	     UINT64 addr = address;
+             bsa_print(ACS_PRINT_ERR,L" address from which data is read 0x%llx\n", address);
+
+	     *data1 = pal_mmio_read(addr);
+	     break;
+            }
+        }
+        //pal_mem_free(HandleBuffer[Index]);
+      }
+    }
+  }
+
+  pal_mem_free(HandleBuffer);
+  return 0;
+}
 
 /**
   @brief   This API checks the PCIe Hierarchy Supports P2P

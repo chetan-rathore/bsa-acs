@@ -228,6 +228,12 @@ val_pcie_data_link_layer_status(uint32_t bdf);
 void
 val_pcie_print_config(uint32_t bdf);
 
+void
+val_pcie_write_config(uint32_t bdf, uint64_t address, uint32_t data);
+
+uint32_t
+val_pcie_read_config(uint32_t bdf, uint64_t address, uint32_t *data);
+
 uint32_t os_p001_entry(uint32_t num_pe);
 uint32_t os_p002_entry(uint32_t num_pe);
 uint32_t os_p003_entry(uint32_t num_pe);

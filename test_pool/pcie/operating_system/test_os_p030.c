@@ -26,6 +26,7 @@
 #define TEST_DESC  "Check Cmd Reg memory space enable     "
 
 static void *branch_to_test;
+  uint32_t bdf;
 
 static
 void
@@ -38,7 +39,7 @@ esr(uint64_t interrupt_type, void *context)
   /* Update the ELR to return to test specified address */
   val_pe_update_elr(context, (uint64_t)branch_to_test);
 
-  val_print(ACS_PRINT_INFO, "\n       Received exception of type: %d", interrupt_type);
+  val_print(ACS_PRINT_ERR, "\n       Received exception of type: %d", interrupt_type);
   val_set_status(pe_index, RESULT_PASS(TEST_NUM, 1));
 }
 
@@ -47,7 +48,7 @@ void
 payload(void)
 {
 
-  uint32_t bdf;
+  //uint32_t bdf;
   uint32_t dsf_bdf;
   uint32_t pe_index;
   uint32_t tbl_index;
@@ -82,8 +83,14 @@ payload(void)
   while (tbl_index < bdf_tbl_ptr->num_entries)
   {
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
-      val_print(ACS_PRINT_DEBUG, "\n      tbl_index %x", tbl_index - 1);
-      val_print(ACS_PRINT_DEBUG, "      BDF %x", bdf);
+      dsf_bdf = 0;
+      val_print(ACS_PRINT_ERR, "\n      tbl_index %x", tbl_index - 1);
+      val_print(ACS_PRINT_ERR, "      BDF %x", bdf);
+
+      if (val_pcie_function_header_type(bdf) == TYPE1_HEADER)
+          val_print(ACS_PRINT_ERR, "      TYPE-1", 0);
+      else
+          val_print(ACS_PRINT_ERR, "      TYPE-0", 0);
 
       /*
        * For a Function with type 0 config space header, obtain
@@ -93,13 +100,14 @@ payload(void)
        * downstream Function exist, obtain its own BAR address.
        */
       if ((val_pcie_function_header_type(bdf) == TYPE1_HEADER) &&
-           (!val_pcie_get_downstream_function(bdf, &dsf_bdf)))
+           (!val_pcie_get_downstream_function(bdf, &dsf_bdf))) {
           val_pcie_get_mmio_bar(dsf_bdf, &bar_base);
+      }
       else
           val_pcie_get_mmio_bar(bdf, &bar_base);
 
       /* Skip this function if it doesn't have mmio BAR */
-      val_print(ACS_PRINT_DEBUG, "      Bar Base %x", bar_base);
+      val_print(ACS_PRINT_ERR, "  Bar Base: %llx", bar_base);
       if (!bar_base)
          continue;
 
@@ -110,7 +118,34 @@ payload(void)
        * Clear unsupported request detected bit in Device
        * Status Register to clear any pending urd status.
        */
+
+      val_print(ACS_PRINT_ERR, " URD:%d", val_pcie_is_urd(bdf));
+      if(dsf_bdf) {
+          val_print(ACS_PRINT_ERR, " DSF BDF:0x%x", dsf_bdf);
+          val_print(ACS_PRINT_ERR, " DSF URD:%d", val_pcie_is_urd(dsf_bdf));
+      }
+
+      val_pcie_enable_msa(bdf);
+
       val_pcie_clear_urd(bdf);
+      if (val_pcie_is_urd(bdf)) {
+          val_print(ACS_PRINT_ERR, "\n       URD bit is still set after clearing", 0);
+      }
+
+      if (dsf_bdf) {
+          val_pcie_clear_urd(dsf_bdf);
+          if (val_pcie_is_urd(dsf_bdf)) {
+              val_print(ACS_PRINT_ERR, "\n       DSF URD bit is still set after clearing", 0);
+          }
+      }
+
+      val_print(ACS_PRINT_ERR, "\n       Before MSE disable ", 0);
+      val_pcie_bar_mem_read(bdf, bar_base + 0x10, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x10 %x ", bar_data);
+      val_pcie_bar_mem_read(bdf, bar_base + 0x40, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x40 %x ", bar_data);
+      val_pcie_bar_mem_read(bdf, bar_base, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base %x ", bar_data);
 
       /*
        * Disable BAR memory space access to cause address
@@ -118,7 +153,12 @@ payload(void)
        * all received memory space accesses are handled as
        * Unsupported Requests by the pcie function.
        */
+      val_print(ACS_PRINT_ERR, "\n       Disable MSE ", 0);
+
       val_pcie_disable_msa(bdf);
+      if (val_pcie_is_msa_enabled(bdf) == 0) {
+          val_print(ACS_PRINT_ERR, "\n       MSE is not getting disabled", 0);
+      }
 
       /* Set test status as FAIL, update to PASS in exception handler */
       val_set_status(pe_index, RESULT_FAIL(TEST_NUM, 2));
@@ -131,15 +171,32 @@ payload(void)
        * response. Based on platform configuration, this may
        * even cause an sync/async exception.
        */
-      bar_data = (*(volatile addr_t *)bar_base);
+//      bar_data = (*(volatile addr_t *)bar_base);
+      val_print(ACS_PRINT_ERR, "\n       After MSE disable bdf %x", bdf);
+      val_pcie_bar_mem_read(bdf, bar_base + 0x10, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x10 %x ", bar_data);
+      val_pcie_bar_mem_read(bdf, bar_base + 0x40, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x40 %x ", bar_data);
+      val_pcie_bar_mem_read(bdf, bar_base, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n        value at bar_base %x ", bar_data);
+
       timeout = TIMEOUT_SMALL;
       while (--timeout > 0);
 
 exception_return:
+
+      val_print(ACS_PRINT_ERR, "\n bdf in exception return %x ", bdf);
+      if (val_pcie_is_urd(bdf)) {
+          val_print(ACS_PRINT_ERR, "       URD bit is set", 0);
+      }
+
+/*      if (dsf_bdf && val_pcie_is_urd(dsf_bdf))
+          val_print(ACS_PRINT_ERR, " dsf URD bit set", 0);*/
+
       /*
        * Check if either of UR response or abort isn't received.
        */
-      val_print(ACS_PRINT_DEBUG, "    bar_data %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "       bar_data %x ", bar_data);
       if (!(IS_TEST_PASS(val_get_status(pe_index)) || (bar_data == PCIE_UNKNOWN_RESPONSE)))
       {
            val_print(ACS_PRINT_ERR, "\n       BDF %x MSE functionality failure", bdf);
