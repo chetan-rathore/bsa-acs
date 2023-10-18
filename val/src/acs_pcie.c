@@ -1495,6 +1495,15 @@ void val_pcie_print_config(uint32_t bdf)
     pal_pcie_print_config(bdf);
 }
 
+void val_pcie_write_config(uint32_t bdf, uint64_t address, uint32_t data)
+{
+    pal_pcie_write_config(bdf, address, data);
+}
+
+uint32_t val_pcie_read_config(uint32_t bdf, uint64_t address, uint32_t *data)
+{
+    return pal_pcie_read_config(bdf, address, data);
+}
 
 /**
   @brief  Reads the BAR memory space access in the command register.
