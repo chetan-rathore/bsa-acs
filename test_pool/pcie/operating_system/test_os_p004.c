@@ -95,6 +95,24 @@ check_bdf_under_rp(uint32_t rp_bdf)
    return 0;
 }
 
+static void listbdf()
+{
+  pcie_device_bdf_table *bdf_tbl_ptr;
+  uint32_t tbl_index = 0;
+  uint32_t bdf, reg_value;
+
+  bdf_tbl_ptr = val_pcie_bdf_table_ptr();
+  while (tbl_index < bdf_tbl_ptr->num_entries)
+  {
+      bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
+      if (val_pcie_read_cfg(bdf, TYPE01_VIDR, &reg_value) == PCIE_UNKNOWN_RESPONSE)
+      {
+          /* Return if there is a bdf mapping issue */
+          val_print(ACS_PRINT_ERR, "\n          BDF 0x%x missing", bdf);
+      }
+  }
+}
+
 static
 void
 payload(void)
@@ -204,6 +222,7 @@ payload(void)
 //        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
 //        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base + mem_offset, KNOWN_DATA);
+        listbdf();
         val_pcie_read_config(bdf,  mem_base + mem_offset, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
@@ -211,6 +230,7 @@ payload(void)
 //        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset + 0x30);
 //        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base + mem_offset + 0x30, KNOWN_DATA);
+        listbdf();
         val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
@@ -229,6 +249,7 @@ payload(void)
         val_print(ACS_PRINT_DEBUG, "\n         write addr is 0x%llx", mem_base + mem_offset);
         val_print(ACS_PRINT_DEBUG, " value 0x%x", KNOWN_DATA);
         val_pcie_bar_mem_write(bdf,  mem_base + mem_offset, KNOWN_DATA);
+        listbdf();
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
         val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset);
         val_print(ACS_PRINT_DEBUG, " value 0x%x", read_value);
@@ -239,6 +260,7 @@ payload(void)
         val_print(ACS_PRINT_DEBUG, "\n         write addr is 0x%llx", mem_base + mem_offset + 0x30);
         val_print(ACS_PRINT_DEBUG, " value 0x%x", KNOWN_DATA);
         val_pcie_bar_mem_write(bdf,  mem_base + mem_offset + 0x30, KNOWN_DATA);
+        listbdf();
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset + 0x30, &read_value);
         val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset + 0x30);
         val_print(ACS_PRINT_DEBUG, " value 0x%x", read_value);
