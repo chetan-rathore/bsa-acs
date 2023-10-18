@@ -79,12 +79,12 @@ check_bdf_under_rp(uint32_t rp_bdf)
               if ((dev_seg == rp_seg) && ((dev_bus >= rp_sec_bus) && (dev_bus <= rp_sub_bus)))
               {
                   val_pcie_read_cfg(dev_bdf, TYPE01_RIDR, &reg_value);
-                  val_print(ACS_PRINT_DEBUG, "\n       Class code is 0x%x", reg_value);
+//                  val_print(ACS_PRINT_DEBUG, "\n       Class code is 0x%x", reg_value);
                   base_cc = reg_value >> TYPE01_BCC_SHIFT;
-                      val_print(ACS_PRINT_DEBUG, "\n       child bdf is 0x%x", dev_bdf);
 
                   if ((base_cc == CNTRL_CC) || (base_cc == DP_CNTRL_CC) || (base_cc == MAS_CC)) {
-                      val_print(ACS_PRINT_DEBUG, "\n       Class code is 0x%x", reg_value);
+                      val_print(ACS_PRINT_DEBUG, "\n       child bdf is 0x%x", dev_bdf);
+
                       return 1;
                   }
               }
@@ -134,13 +134,12 @@ payload(void)
   */
   while (tbl_index < bdf_tbl_ptr->num_entries)
   {
-      val_print(ACS_PRINT_ERR, "\n    BDF is %x ", bdf);
+//      val_print(ACS_PRINT_ERR, "\n    BDF is %x ", bdf);
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
       /* Enable Bus Master Enable */
       val_pcie_enable_bme(bdf);
       /* Enable Memory Space Access */
       val_pcie_enable_msa(bdf);
-      val_pcie_print_config(bdf);
   }
 
   tbl_index = 0;
@@ -160,7 +159,7 @@ payload(void)
 
         /* Read Function's NP Memory Base Limit Register */
         val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n       BDF is 0x%x", bdf);
+//        val_print(ACS_PRINT_DEBUG, "\n       BDF is 0x%x", bdf);
         if (read_value == 0)
           continue;
 
@@ -170,6 +169,7 @@ payload(void)
 
         val_print(ACS_PRINT_DEBUG, "\n       NP mem base is 0x%llx", mem_base);
         val_print(ACS_PRINT_DEBUG, " & mem lim is  0x%llx", mem_lim);
+        val_pcie_print_config(bdf);
 
         /* If Memory Limit is programmed with value less the Base, then Skip.*/
         if (mem_lim < mem_base) {
@@ -197,21 +197,22 @@ payload(void)
          * Base + offset must always be in the range.
          * Read the same
          */
-        val_print(ACS_PRINT_DEBUG, "\n       Check-1 starts. Access using translation offset", 0);
+        val_print(ACS_PRINT_DEBUG, "\n       Check-1 starts", 0);
+        val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset", 0);
 
         val_pcie_read_config(bdf,  mem_base + mem_offset, &old_value);
-        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
-        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+//        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
+//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base + mem_offset, KNOWN_DATA);
         val_pcie_read_config(bdf,  mem_base + mem_offset, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
+//        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
         val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &old_value);
-        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset + 0x30);
-        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+//        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset + 0x30);
+//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base + mem_offset + 0x30, KNOWN_DATA);
         val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
+//        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
 
         if (val_pcie_is_urd(bdf) || ((read_value == 0xFFFFFFFF) && (old_value != 0xFFFFFFFF))) {
@@ -219,25 +220,28 @@ payload(void)
           val_pcie_clear_urd(bdf);
           test_fails++;
         }
-        val_print(ACS_PRINT_DEBUG, "\n       Check-1 using translation offset ends ", 0);
 
-
-
-        val_print(ACS_PRINT_DEBUG, "\n\n       Check-1 starts. Access using bridge protocol", 0);
+        val_print(ACS_PRINT_DEBUG, "\n        Access using bridge protocol", 0);
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
-        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
-        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+        val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", old_value);
+        val_print(ACS_PRINT_DEBUG, "\n         write addr is 0x%llx", mem_base + mem_offset);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", KNOWN_DATA);
         val_pcie_bar_mem_write(bdf,  mem_base + mem_offset, KNOWN_DATA);
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
+        val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", read_value);
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset + 0x30, &old_value);
-        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset + 0x30);
-        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+        val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset + 0x30);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", old_value);
+        val_print(ACS_PRINT_DEBUG, "\n         write addr is 0x%llx", mem_base + mem_offset + 0x30);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", KNOWN_DATA);
         val_pcie_bar_mem_write(bdf,  mem_base + mem_offset + 0x30, KNOWN_DATA);
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset + 0x30, &read_value);
-        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
+        val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset + 0x30);
+        val_print(ACS_PRINT_DEBUG, " value 0x%x", read_value);
 
 
         if (val_pcie_is_urd(bdf) || ((read_value == 0xFFFFFFFF) && (old_value != 0xFFFFFFFF))) {
@@ -245,7 +249,7 @@ payload(void)
           val_pcie_clear_urd(bdf);
           test_fails++;
         }
-        val_print(ACS_PRINT_DEBUG, "\n       Check-1 using bridge protocol ends", 0);
+        val_print(ACS_PRINT_DEBUG, "\n       Check-1 ends", 0);
 
            /** Skip Check_2 if there is an Ethernet or Display controller
             * under the RP device
@@ -253,7 +257,7 @@ payload(void)
            if (check_bdf_under_rp(bdf))
            {
                val_print(ACS_PRINT_DEBUG, "\n       Skipping for RP BDF 0x%x", bdf);
-               continue;
+ //              continue;
            }
 
         /**Check_2: Accessing out of NP memory limit range must return 0xFFFFFFFF
@@ -266,79 +270,45 @@ payload(void)
 
         if ((mem_lim >> MEM_SHIFT) > (mem_base >> MEM_SHIFT))
         {
-           val_print(ACS_PRINT_DEBUG, "\n       Check-2  Access using translation offset starts", 0);
+           val_print(ACS_PRINT_DEBUG, "\n       Check-2  starts", 0);
 
            new_mem_lim = mem_base + MEM_OFFSET_LARGE;
 
-           val_print(ACS_PRINT_DEBUG, "\n       Before limit changes", 0);
+           val_print(ACS_PRINT_DEBUG, "\n        Before limit changes", 0);
+           val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset starts", 0);
+
            val_pcie_read_config(bdf,  mem_base + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", mem_base + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+        //   val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", mem_base + 0x40);
+       //    val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
 
            val_pcie_read_config(bdf,  new_mem_lim + 0x10, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+     //      val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
+     //      val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
 
            val_pcie_read_config(bdf,  new_mem_lim + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+     //      val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
+     //      val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
 
            val_pcie_read_config(bdf,  new_mem_lim, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+     //      val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
+     //      val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
 
-
-           mem_base = mem_base | (mem_base  >> 16);
-           val_pcie_write_cfg(bdf, TYPE1_NP_MEM, mem_base);
-           val_pcie_read_cfg(bdf, TYPE1_NP_MEM, &read_value);
-           val_print(ACS_PRINT_DEBUG, "\n       New mem lim is  0x%llx",
-                                          (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS);
-
-           val_print(ACS_PRINT_DEBUG, "\n       After limit changes", 0);
-           val_pcie_read_config(bdf,  ori_mem_base + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", ori_mem_base + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
-
-           val_pcie_read_config(bdf,  new_mem_lim + 0x10, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
-
-           val_pcie_read_config(bdf,  new_mem_lim + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
-
-           val_pcie_read_config(bdf,  new_mem_lim, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
-
-           if ((val_pcie_is_urd(bdf) == 0) && (value != PCIE_UNKNOWN_RESPONSE)) {
-               val_print(ACS_PRINT_ERR, "\n       Chk-2 FAILS URD not set and response also not 1's", 0);
-               test_fails++;
-           }
-           val_print(ACS_PRINT_DEBUG, "\n       Check-2  using translation offset ends\n", 0);
-
-
-           val_print(ACS_PRINT_DEBUG, "\n       Check-2  Access using bridge protocol starts", 0);
-
-           new_mem_lim = mem_base + MEM_OFFSET_LARGE;
-
-           val_print(ACS_PRINT_DEBUG, "\n       Before limit changes", 0);
+           val_print(ACS_PRINT_DEBUG, "\n        Access using bridge protocol starts", 0);
            val_pcie_bar_mem_read(bdf, mem_base + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", mem_base + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", mem_base + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim + 0x10, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim + 0x10);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
-
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            mem_base = mem_base | (mem_base  >> 16);
            val_pcie_write_cfg(bdf, TYPE1_NP_MEM, mem_base);
@@ -346,28 +316,47 @@ payload(void)
            val_print(ACS_PRINT_DEBUG, "\n       New mem lim is  0x%llx",
                                           (read_value & MEM_LIM_MASK) | MEM_LIM_LOWER_BITS);
 
-           val_print(ACS_PRINT_DEBUG, "\n       After limit changes", 0);
+           val_print(ACS_PRINT_DEBUG, "\n        After limit changes", 0);
+           val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset starts", 0);
+
+           val_pcie_read_config(bdf,  ori_mem_base + 0x40, &value);
+//           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", ori_mem_base + 0x40);
+  //         val_print(ACS_PRINT_DEBUG, "  is 0x%x", value);
+
+           val_pcie_read_config(bdf,  new_mem_lim + 0x10, &value);
+    //       val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
+      //     val_print(ACS_PRINT_DEBUG, "  is 0x%x", value);
+
+           val_pcie_read_config(bdf,  new_mem_lim + 0x40, &value);
+    //       val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
+      //     val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_pcie_read_config(bdf,  new_mem_lim, &value);
+   //        val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
+     //      val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+
+           val_print(ACS_PRINT_DEBUG, "\n        Access using bridge protocol starts", 0);
            val_pcie_bar_mem_read(bdf, ori_mem_base + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", ori_mem_base + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", ori_mem_base + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim + 0x10, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x10);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim + 0x10);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim + 0x40, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim + 0x40);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim + 0x40);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            val_pcie_bar_mem_read(bdf, new_mem_lim, &value);
-           val_print(ACS_PRINT_DEBUG, "\n        Value at 0x%llx", new_mem_lim);
-           val_print(ACS_PRINT_DEBUG, "  is 0x%llx", value);
+           val_print(ACS_PRINT_DEBUG, "\n         read addr 0x%llx", new_mem_lim);
+           val_print(ACS_PRINT_DEBUG, "  value 0x%x", value);
 
            if ((val_pcie_is_urd(bdf) == 0) && (value != PCIE_UNKNOWN_RESPONSE)) {
                val_print(ACS_PRINT_ERR, "\n       Chk-2 FAILS URD not set and response also not 1's", 0);
                test_fails++;
            }
-           val_print(ACS_PRINT_DEBUG, "\n       Check-2  using bridge protocol ends\n", 0);
+           val_print(ACS_PRINT_DEBUG, "\n       Check-2 ends", 0);
         }
 
 exception_return:

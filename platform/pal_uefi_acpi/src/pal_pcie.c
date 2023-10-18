@@ -480,12 +480,10 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
 		if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
 			continue;
 
-
-    bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
-    bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
-    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
-    bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
-    //bsa_print(ACS_PRINT_ERR,L" mapping 0x%llx\n", ioremap((u.res->qword.min + u.res->qword.offset), u.res->qword.len ));
+    bsa_print(ACS_PRINT_ERR,L"\n       Offset 0x%llx", u.res->qword.offset);
+    bsa_print(ACS_PRINT_ERR,L" Start addr 0x%llx", (u.res->qword.min + u.res->qword.offset));
+    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx", u.res->qword.len);
+    bsa_print(ACS_PRINT_ERR,L" End addr 0x%llx", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
 
         }
         }
@@ -544,17 +542,21 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
 			continue;
 		if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
 			continue;
-
-    
-
-    bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
-    bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
-    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
-    bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
-    address = address +  u.res->qword.offset;
-    bsa_print(ACS_PRINT_ERR,L" address to which data is written 0x%llx\n", address);
-    pal_mmio_write(address, data);
-    break;
+//    bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
+//    bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
+//    bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
+//    bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
+//    address = address +  u.res->qword.offset;
+             if ((address >= (u.res->qword.min + u.res->qword.offset))  &&
+                 (address <= (u.res->qword.min + u.res->qword.offset + u.res->qword.len))) {
+                     address = address +  u.res->qword.offset;
+                     bsa_print(ACS_PRINT_ERR,L"\n         write addr 0x%llx", address);
+                     bsa_print(ACS_PRINT_ERR,L"  value 0x%x", data);
+                     pal_mmio_write(address, data);
+	                 break;
+            }
+            else
+                     bsa_print(ACS_PRINT_ERR,L"\n        Ignoring start addr 0x%llx", u.res->qword.min + u.res->qword.offset);
 
         }
         }
@@ -613,26 +615,26 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
 	    		continue;
 	    	if ( u.res->qword.type != ACPI_ADDRESS_TYPE_MEM )
 	    		continue;
-
-    
-
-             bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
-             bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
-             bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
-             bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
-             address = address +  u.res->qword.offset;
-	     UINT64 addr = address;
-             bsa_print(ACS_PRINT_ERR,L" address from which data is read 0x%llx\n", address);
-
-	     *data1 = pal_mmio_read(addr);
-	     break;
+        //     bsa_print(ACS_PRINT_ERR,L"\n Offset 0x%llx\n", u.res->qword.offset);
+        //     bsa_print(ACS_PRINT_ERR,L" Start address 0x%llx\n", (u.res->qword.min + u.res->qword.offset));
+       //      bsa_print(ACS_PRINT_ERR,L" Len 0x%llx\n", u.res->qword.len);
+       //      bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
+             if ((address >= (u.res->qword.min + u.res->qword.offset))  &&
+                 (address <= (u.res->qword.min + u.res->qword.offset + u.res->qword.len))) {
+                     address = address +  u.res->qword.offset;
+                     bsa_print(ACS_PRINT_ERR,L"\n         read addr 0x%llx", address);
+                    *data1 = pal_mmio_read(address);
+                     bsa_print(ACS_PRINT_ERR,L"  value 0x%x", *data1);
+	                break;
             }
+            else
+                     bsa_print(ACS_PRINT_ERR,L"\n        Ignoring start addr 0x%llx", u.res->qword.min + u.res->qword.offset);
         }
         //pal_mem_free(HandleBuffer[Index]);
       }
     }
   }
-
+}
   pal_mem_free(HandleBuffer);
   return 0;
 }
