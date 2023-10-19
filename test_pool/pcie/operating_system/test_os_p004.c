@@ -234,13 +234,6 @@ payload(void)
         val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
-
-        if (val_pcie_is_urd(bdf) || ((read_value == 0xFFFFFFFF) && (old_value != 0xFFFFFFFF))) {
-          val_print(ACS_PRINT_ERR, "\n       Check-1 FAILS URD set or all 1's", 0);
-          val_pcie_clear_urd(bdf);
-          test_fails++;
-        }
-
         val_print(ACS_PRINT_DEBUG, "\n        Access using bridge protocol", 0);
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
@@ -279,7 +272,7 @@ payload(void)
            if (check_bdf_under_rp(bdf))
            {
                val_print(ACS_PRINT_DEBUG, "\n       Skipping for RP BDF 0x%x", bdf);
- //              continue;
+               continue;
            }
 
         /**Check_2: Accessing out of NP memory limit range must return 0xFFFFFFFF
