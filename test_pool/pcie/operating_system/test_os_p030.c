@@ -84,7 +84,7 @@ payload(void)
   {
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
       dsf_bdf = 0;
-      val_print(ACS_PRINT_ERR, "\n      tbl_index %x", tbl_index - 1);
+      val_print(ACS_PRINT_ERR, "\n       tbl_index %x", tbl_index - 1);
       val_print(ACS_PRINT_ERR, "      BDF %x", bdf);
 
       if (val_pcie_function_header_type(bdf) == TYPE1_HEADER)
@@ -140,12 +140,20 @@ payload(void)
       }
 
       val_print(ACS_PRINT_ERR, "\n       Before MSE disable ", 0);
+      val_print(ACS_PRINT_ERR, "\n        Using PCIIO protocol  ", 0);
       val_pcie_bar_mem_read(bdf, bar_base + 0x10, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x10 %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x10 %x ", bar_data);
       val_pcie_bar_mem_read(bdf, bar_base + 0x40, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x40 %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x40 %x ", bar_data);
       val_pcie_bar_mem_read(bdf, bar_base, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n        Using translation offset  ", 0);
+      val_pcie_read_config(bdf,  bar_base + 0x10, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x10 %x ", bar_data);
+      val_pcie_read_config(bdf, bar_base + 0x40, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x40 %x ", bar_data);
+      val_pcie_read_config(bdf, bar_base, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base %x ", bar_data);
 
       /*
        * Disable BAR memory space access to cause address
@@ -172,22 +180,29 @@ payload(void)
        * even cause an sync/async exception.
        */
 //      bar_data = (*(volatile addr_t *)bar_base);
-      val_print(ACS_PRINT_ERR, "\n       After MSE disable bdf %x", bdf);
+      val_print(ACS_PRINT_ERR, "\n       After MSE disable", 0);
+      val_print(ACS_PRINT_ERR, "\n        Using PCIIO protocol  ", 0);
       val_pcie_bar_mem_read(bdf, bar_base + 0x10, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x10 %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x10 %x ", bar_data);
       val_pcie_bar_mem_read(bdf, bar_base + 0x40, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base + 0x40 %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x40 %x ", bar_data);
       val_pcie_bar_mem_read(bdf, bar_base, &bar_data);
-      val_print(ACS_PRINT_ERR, "\n        value at bar_base %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base %x ", bar_data);
+      val_print(ACS_PRINT_ERR, "\n        Using translation offset  ", 0);
+      val_pcie_read_config(bdf,  bar_base + 0x10, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x10 %x ", bar_data);
+      val_pcie_read_config(bdf, bar_base + 0x40, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base + 0x40 %x ", bar_data);
+      val_pcie_read_config(bdf, bar_base, &bar_data);
+      val_print(ACS_PRINT_ERR, "\n         value at bar_base %x ", bar_data);
 
       timeout = TIMEOUT_SMALL;
       while (--timeout > 0);
 
 exception_return:
 
-      val_print(ACS_PRINT_ERR, "\n bdf in exception return %x ", bdf);
       if (val_pcie_is_urd(bdf)) {
-          val_print(ACS_PRINT_ERR, "       URD bit is set", 0);
+          val_print(ACS_PRINT_ERR, "       BDF 0x%x URD bit is set", bdf);
       }
 
 /*      if (dsf_bdf && val_pcie_is_urd(dsf_bdf))
@@ -196,7 +211,7 @@ exception_return:
       /*
        * Check if either of UR response or abort isn't received.
        */
-      val_print(ACS_PRINT_ERR, "       bar_data %x ", bar_data);
+      //val_print(ACS_PRINT_ERR, "       bar_data %x ", bar_data);
       if (!(IS_TEST_PASS(val_get_status(pe_index)) || (bar_data == PCIE_UNKNOWN_RESPONSE)))
       {
            val_print(ACS_PRINT_ERR, "\n       BDF %x MSE functionality failure", bdf);

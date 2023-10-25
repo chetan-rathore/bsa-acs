@@ -1520,7 +1520,7 @@ val_pcie_is_msa_enabled(uint32_t bdf)
 
   /* Enable MSE bit in Command Register to enable BAR memory space accesses */
   val_pcie_read_cfg(bdf, TYPE01_CR, &reg_value);
-  val_print(ACS_PRINT_DEBUG, "\n       reg_value %x", reg_value);
+//  val_print(ACS_PRINT_DEBUG, "\n       reg_value %x", reg_value);
   reg_value &= (1 << CR_MSE_SHIFT);
   if (reg_value)
       return 0;
