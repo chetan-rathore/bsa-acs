@@ -549,7 +549,7 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
 //    address = address +  u.res->qword.offset;
              if ((address >= (u.res->qword.min + u.res->qword.offset))  &&
                  (address <= (u.res->qword.min + u.res->qword.offset + u.res->qword.len))) {
-                     address = address +  u.res->qword.offset;
+                     address = address - u.res->qword.offset;
                      bsa_print(ACS_PRINT_ERR,L"\n         write addr 0x%llx", address);
                      bsa_print(ACS_PRINT_ERR,L"  value 0x%x", data);
                      pal_mmio_write(address, data);
@@ -621,7 +621,7 @@ unsigned int acpi_resource_tag ( union acpi_resource *res ) {
        //      bsa_print(ACS_PRINT_ERR,L" End address 0x%llx\n", (u.res->qword.min + u.res->qword.offset + u.res->qword.len - 1));
              if ((address >= (u.res->qword.min + u.res->qword.offset))  &&
                  (address <= (u.res->qword.min + u.res->qword.offset + u.res->qword.len))) {
-                     address = address +  u.res->qword.offset;
+                     address = address -  u.res->qword.offset;
                      bsa_print(ACS_PRINT_ERR,L"\n         read addr 0x%llx", address);
                     *data1 = pal_mmio_read(address);
                      bsa_print(ACS_PRINT_ERR,L"  value 0x%x", *data1);
