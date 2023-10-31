@@ -105,11 +105,10 @@ static void listbdf()
   while (tbl_index < bdf_tbl_ptr->num_entries)
   {
       bdf = bdf_tbl_ptr->device[tbl_index++].bdf;
-      if (val_pcie_read_cfg(bdf, TYPE01_VIDR, &reg_value) == PCIE_UNKNOWN_RESPONSE)
-      {
-          /* Return if there is a bdf mapping issue */
-          val_print(ACS_PRINT_ERR, "\n          BDF 0x%x missing", bdf);
-      }
+      val_pcie_read_cfg(bdf, TYPE01_VIDR, &reg_value);
+      /* Return if there is a bdf mapping issue */
+      val_print(ACS_PRINT_ERR, "\n          BDF 0x%x VIDR value", bdf);
+      val_print(ACS_PRINT_ERR, "   0x%x ", reg_value);
   }
 }
 
