@@ -216,6 +216,7 @@ payload(void)
          */
         val_print(ACS_PRINT_DEBUG, "\n       Check-1 starts", 0);
 
+/* 
         val_print(ACS_PRINT_DEBUG, "\n        Access using bridge protocol", 0);
 
         val_pcie_bar_mem_read(bdf, mem_base + mem_offset, &old_value);
@@ -240,7 +241,7 @@ payload(void)
         val_print(ACS_PRINT_DEBUG, "\n         read addr is 0x%llx", mem_base + mem_offset + 0x30);
         val_print(ACS_PRINT_DEBUG, " value 0x%x", read_value);
 
-        
+    */    
         val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset", 0);
 
         val_pcie_read_config(bdf,  mem_base + mem_offset, &old_value);
