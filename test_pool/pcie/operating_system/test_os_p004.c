@@ -126,6 +126,7 @@ payload(void)
   uint32_t test_fails = 0;
   uint32_t mem_offset = 0;
   uint64_t mem_base = 0;
+  uint64_t mem_base2 = 0;
   uint64_t ori_mem_base = 0;
   uint64_t mem_lim = 0, new_mem_lim = 0;
   uint32_t status;
@@ -244,22 +245,24 @@ payload(void)
     */    
         val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset", 0);
 
-        val_pcie_read_config(bdf,  mem_base + mem_offset, &old_value);
-//        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset);
-//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
-        val_pcie_write_config(bdf,  mem_base + mem_offset, KNOWN_DATA);
+        mem_base2 = mem_limit - 0x1FF;
+        val_pcie_read_config(bdf,  mem_base2 + mem_offset, &old_value);
         listbdf();
-        val_pcie_read_config(bdf,  mem_base + mem_offset, &read_value);
+//        val_print(ACS_PRINT_DEBUG, "\n        mem base2 + offset is 0x%llx", mem_base2 + mem_offset);
+//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+        val_pcie_write_config(bdf,  mem_base2 + mem_offset, KNOWN_DATA);
+        listbdf();
+        val_pcie_read_config(bdf,  mem_base2 + mem_offset, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
-        val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &old_value);
-//        val_print(ACS_PRINT_DEBUG, "\n        mem base + offset is 0x%llx", mem_base + mem_offset + 0x30);
-//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
-        val_pcie_write_config(bdf,  mem_base + mem_offset + 0x30, KNOWN_DATA);
+        val_pcie_read_config(bdf,  mem_base2 + mem_offset + 0x30, &old_value);
         listbdf();
-        val_pcie_read_config(bdf,  mem_base + mem_offset + 0x30, &read_value);
+//        val_print(ACS_PRINT_DEBUG, "\n        mem base2 + offset is 0x%llx", mem_base2 + mem_offset + 0x30);
+//        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
+        val_pcie_write_config(bdf,  mem_base2 + mem_offset + 0x30, KNOWN_DATA);
+        listbdf();
+        val_pcie_read_config(bdf,  mem_base2 + mem_offset + 0x30, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
-
 
 
         if (val_pcie_is_urd(bdf) || ((read_value == 0xFFFFFFFF) && (old_value != 0xFFFFFFFF))) {
