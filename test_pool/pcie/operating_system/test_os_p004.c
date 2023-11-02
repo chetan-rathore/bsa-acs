@@ -246,22 +246,33 @@ payload(void)
         val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset", 0);
 
         mem_base2 = mem_lim - 0x1FF;
+        val_pcie_read_cfg(bdf, 0x1C, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n RP 0x1C offset value 0x%x", read_value);
+
         val_pcie_read_config(bdf,  mem_base2 + mem_offset, &old_value);
+                val_pcie_read_cfg(bdf, 0x1C, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n RP 0x1C offset value 0x%x", read_value);
         listbdf();
 //        val_print(ACS_PRINT_DEBUG, "\n        mem base2 + offset is 0x%llx", mem_base2 + mem_offset);
 //        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base2 + mem_offset, KNOWN_DATA);
+                val_pcie_read_cfg(bdf, 0x1C, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n RP 0x1C offset value 0x%x", read_value);
         listbdf();
-        val_pcie_read_config(bdf,  mem_base2 + mem_offset, &read_value);
+//        val_pcie_read_config(bdf,  mem_base2 + mem_offset, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
         val_pcie_read_config(bdf,  mem_base2 + mem_offset + 0x30, &old_value);
+        val_pcie_read_cfg(bdf, 0x1C, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n RP 0x1C offset value 0x%x", read_value);
         listbdf();
 //        val_print(ACS_PRINT_DEBUG, "\n        mem base2 + offset is 0x%llx", mem_base2 + mem_offset + 0x30);
 //        val_print(ACS_PRINT_DEBUG, "\n old_value %x", old_value);
         val_pcie_write_config(bdf,  mem_base2 + mem_offset + 0x30, KNOWN_DATA);
+                  val_pcie_read_cfg(bdf, 0x1C, &read_value);
+        val_print(ACS_PRINT_DEBUG, "\n RP 0x1C offset value 0x%x", read_value);
         listbdf();
-        val_pcie_read_config(bdf,  mem_base2 + mem_offset + 0x30, &read_value);
+  //      val_pcie_read_config(bdf,  mem_base2 + mem_offset + 0x30, &read_value);
 //        val_print(ACS_PRINT_DEBUG, "\n value after write %x", read_value);
 
 
