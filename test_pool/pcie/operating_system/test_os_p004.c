@@ -245,7 +245,7 @@ payload(void)
     */    
         val_print(ACS_PRINT_DEBUG, "\n        Access using translation offset", 0);
 
-        mem_base2 = mem_limit - 0x1FF;
+        mem_base2 = mem_lim - 0x1FF;
         val_pcie_read_config(bdf,  mem_base2 + mem_offset, &old_value);
         listbdf();
 //        val_print(ACS_PRINT_DEBUG, "\n        mem base2 + offset is 0x%llx", mem_base2 + mem_offset);
