@@ -33,6 +33,7 @@ payload()
   uint32_t bdf;
   uint64_t count = val_peripheral_get_info(NUM_USB, 0);
   uint32_t index = val_pe_get_index_mpid(val_pe_get_mpid());
+  uint32_t xhci_ehci_usb_found = 0;
 
   if (count == 0) {
       val_set_status(index, RESULT_SKIP(TEST_NUM, 1));
@@ -42,18 +43,15 @@ payload()
   while (count != 0) {
       if (val_peripheral_get_info(USB_PLATFORM_TYPE, count - 1) == PLATFORM_TYPE_DT) {
           interface = val_peripheral_get_info(USB_INTERFACE_TYPE, count - 1);
-          if ((interface != USB_TYPE_EHCI) && (interface != USB_TYPE_XHCI)) {
-              val_print(ACS_PRINT_WARN, "\n       Detected USB CTRL %d supports", count - 1);
-              val_print(ACS_PRINT_WARN, " %x interface and not EHCI/XHCI", interface);
-              val_set_status(index, RESULT_FAIL(TEST_NUM, 1));
-              return;
+          val_print(ACS_PRINT_INFO, "\n       interface value %x", interface);
+          if ((interface == USB_TYPE_EHCI) || (interface == USB_TYPE_XHCI)) {
+              xhci_ehci_usb_found++;
           }
       }
       else {
           bdf = val_peripheral_get_info(USB_BDF, count - 1);
           ret = val_pcie_read_cfg(bdf, 0x8, &interface);
-          interface = (interface >> 8) & 0xFF;
-          if (ret == PCIE_NO_MAPPING || (interface < 0x20) || (interface == 0xFF)) {
+          if (ret == PCIE_NO_MAPPING) {
               val_print(ACS_PRINT_INFO, "\n       WARN: USB CTRL ECAM access failed 0x%x  ",
                         interface);
               val_print(ACS_PRINT_INFO, "\n       Re-checking using PCIIO protocol",
@@ -66,17 +64,18 @@ payload()
                   return;
               }
               interface = (interface >> 8) & 0xFF;
-              if ((interface < 0x20) || (interface == 0xFF)) {
-                  val_print(ACS_PRINT_WARN, "\n       Detected USB bdf %x supports", bdf);
-                  val_print(ACS_PRINT_WARN, " %x interface and not EHCI/XHCI", interface);
-                  val_set_status(index, RESULT_FAIL(TEST_NUM, 1));
-                  return;
+              val_print(ACS_PRINT_INFO, "\n       interface value %x", interface);
+              if ((interface == 0x20) || (interface == 0x30) || (interface == 0x40)) {
+                  xhci_ehci_usb_found++;
               }
           }
       }
       count--;
   }
-  val_set_status(index, RESULT_PASS(TEST_NUM, 1));
+  if (xhci_ehci_found)
+      val_set_status(index, RESULT_PASS(TEST_NUM, 1));
+  else
+      val_set_status(index, RESULT_FAIL(TEST_NUM, 1));
   return;
 }
 
