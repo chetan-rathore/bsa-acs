@@ -54,8 +54,7 @@ payload()
           if (ret == PCIE_NO_MAPPING) {
               val_print(ACS_PRINT_INFO, "\n       WARN: USB CTRL ECAM access failed 0x%x  ",
                         interface);
-              val_print(ACS_PRINT_INFO, "\n       Re-checking using PCIIO protocol",
-                        0);
+              val_print(ACS_PRINT_INFO, "\n       Re-checking using PCIIO protocol", 0);
               ret = val_pcie_io_read_cfg(bdf, 0x8, &interface);
               if (ret == PCIE_NO_MAPPING) {
                   val_print(ACS_PRINT_DEBUG,
@@ -63,16 +62,26 @@ payload()
                   val_set_status(index, RESULT_FAIL(TEST_NUM, 2));
                   return;
               }
-              interface = (interface >> 8) & 0xFF;
-              val_print(ACS_PRINT_INFO, "\n       interface value %x", interface);
-              if ((interface == 0x20) || (interface == 0x30) || (interface == 0x40)) {
+	  }
+          interface = (interface >> 8) & 0xFF;
+          val_print(ACS_PRINT_INFO, "\n       interface value %x", interface);
+          if ((interface == 0x20) || (interface == 0x30) || (interface == 0x40)) {
+              if (interface == 0x20)
+	      {
+	          uint64_t base_addr = val_peripheral_get_info(USB_BASE0, count - 1);
+                  val_print(ACS_PRINT_INFO, "\n       base addr %llx", base_addr);
+		  uint32_t value = val_mmio_read(base_addr);
+		  val_print(ACS_PRINT_INFO, "\n       version value 0x%x", value);
+		  if ((value >> 20) && 0xFF == 0x11)
+			  xhci_ehci_usb_found++;
+	      }
+	      else
                   xhci_ehci_usb_found++;
-              }
           }
       }
       count--;
   }
-  if (xhci_ehci_found)
+  if (xhci_ehci_usb_found)
       val_set_status(index, RESULT_PASS(TEST_NUM, 1));
   else
       val_set_status(index, RESULT_FAIL(TEST_NUM, 1));
