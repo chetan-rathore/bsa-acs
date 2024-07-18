@@ -33,7 +33,8 @@ payload()
   uint32_t bdf;
   uint64_t count = val_peripheral_get_info(NUM_USB, 0);
   uint32_t index = val_pe_get_index_mpid(val_pe_get_mpid());
-  uint32_t xhci_ehci_usb_found = 0;
+  uint32_t test_pass = 0;
+  uint32_t test_fail = 0;
 
   if (count == 0) {
       val_set_status(index, RESULT_SKIP(TEST_NUM, 1));
@@ -65,26 +66,35 @@ payload()
 	  }
           interface = (interface >> 8) & 0xFF;
           val_print(ACS_PRINT_INFO, "\n       interface value %x", interface);
-          if ((interface == 0x20) || (interface == 0x30) || (interface == 0x40)) {
-              if (interface == 0x20)
-	      {
-	          uint64_t base_addr = val_peripheral_get_info(USB_BASE0, count - 1);
-                  val_print(ACS_PRINT_INFO, "\n       base addr %llx", base_addr);
-		  uint32_t value = val_mmio_read(base_addr);
-		  val_print(ACS_PRINT_INFO, "\n       version value 0x%x", value);
-		  if ((value >> 20) && 0xFF == 0x11)
-			  xhci_ehci_usb_found++;
-	      }
+          if (interface == 0x20) {
+	      uint64_t base_addr = val_peripheral_get_info(USB_BASE0, count - 1);
+              val_print(ACS_PRINT_INFO, "\n       base addr %llx", base_addr);
+	      uint32_t value = val_mmio_read(base_addr);
+	      val_print(ACS_PRINT_INFO, "\n       version value 0x%x", value);
+	      if ((value >> 16) && 0xFF >= 0x11)
+                  test_pass++;
 	      else
-                  xhci_ehci_usb_found++;
+                  test_fail++;
+          }
+          if (interface == 0x30) {
+	      uint64_t base_addr = val_peripheral_get_info(USB_BASE0, count - 1);
+              val_print(ACS_PRINT_INFO, "\n       base addr %llx", base_addr);
+	      uint32_t value = val_mmio_read(base_addr);
+	      val_print(ACS_PRINT_INFO, "\n       version value 0x%x", value);
+	      if ((value >> 16) && 0xFF >= 0x11)
+                  test_pass++;
+	      else
+                  test_fail++;
           }
       }
       count--;
   }
-  if (xhci_ehci_usb_found)
+  if (test_fail)
+      val_set_status(index, RESULT_FAIL(TEST_NUM, test_fail));
+  else if (test_pass)
       val_set_status(index, RESULT_PASS(TEST_NUM, 1));
   else
-      val_set_status(index, RESULT_FAIL(TEST_NUM, 1));
+      val_set_status(index, RESULT_SKIP(TEST_NUM, 1));
   return;
 }
 
