@@ -59,43 +59,43 @@ typedef struct{
 pe_reg_info *g_pe_reg_info;
 
 reg_details reg_list[] = {
-    {CCSIDR_EL1,       MASK_CCSIDR_LS, "CCSIDR_EL1",       0x0 },
-    {MIDR_EL1,         MASK_MIDR,      "MIDR_EL1",         0x0 },
-    {ID_AA64PFR0_EL1,  0x0,            "ID_AA64PFR0_EL1" , 0x0 },
-    {ID_AA64PFR1_EL1,  0x0,            "ID_AA64PFR1_EL1" , 0x0 },
-    {ID_AA64DFR0_EL1,  0x0,            "ID_AA64DFR0_EL1" , 0x0 },
-    {ID_AA64DFR1_EL1,  0x0,            "ID_AA64DFR1_EL1" , 0x0 },
+    {CCSIDR_EL1,       MASK_CCSIDR_LS, "CCSIDR_EL1      ", 0x0 },
+    {MIDR_EL1,         MASK_MIDR,      "MIDR_EL1        ", 0x0 },
+    {MPIDR_EL1,        MASK_MPIDR,     "MPIDR_EL1       ", 0x0 },
+    {CTR_EL0,          MASK_CTR,       "CTR_EL0         ", 0x0 },
+    {ID_AA64PFR0_EL1,  0x0,            "ID_AA64PFR0_EL1 ", 0x0 },
+    {ID_AA64PFR1_EL1,  0x0,            "ID_AA64PFR1_EL1 ", 0x0 },
+    {ID_AA64DFR0_EL1,  0x0,            "ID_AA64DFR0_EL1 ", 0x0 },
+    {ID_AA64DFR1_EL1,  0x0,            "ID_AA64DFR1_EL1 ", 0x0 },
     {ID_AA64MMFR0_EL1, MASK_AA64MMFR0, "ID_AA64MMFR0_EL1", 0x0 },
     {ID_AA64MMFR1_EL1, 0x0,            "ID_AA64MMFR1_EL1", 0x0 },
     {ID_AA64MMFR2_EL1, 0x0,            "ID_AA64MMFR2_EL1", 0x0 },
-    {CTR_EL0,          MASK_CTR,       "CTR_EL0"         , 0x0 },
     {ID_AA64ISAR0_EL1, 0x0,            "ID_AA64ISAR0_EL1", 0x0 },
     {ID_AA64ISAR1_EL1, 0x0,            "ID_AA64ISAR1_EL1", 0x0 },
-    {MPIDR_EL1,        MASK_MPIDR,     "MPIDR_EL1"       , 0x0 },
-    {ID_DFR0_EL1,      0x0,            "ID_DFR0_EL1"     , AA32},
-    {ID_ISAR0_EL1,     0x0,            "ID_ISAR0_EL1"    , AA32},
-    {ID_ISAR1_EL1,     0x0,            "ID_ISAR1_EL1"    , AA32},
-    {ID_ISAR2_EL1,     0x0,            "ID_ISAR2_EL1"    , AA32},
-    {ID_ISAR3_EL1,     0x0,            "ID_ISAR3_EL1"    , AA32},
-    {ID_ISAR4_EL1,     0x0,            "ID_ISAR4_EL1"    , AA32},
-    {ID_ISAR5_EL1,     0x0,            "ID_ISAR5_EL1"    , AA32},
-    {ID_MMFR0_EL1,     0x0,            "ID_MMFR0_EL1"    , AA32},
-    {ID_MMFR1_EL1,     0x0,            "ID_MMFR1_EL1"    , AA32},
-    {ID_MMFR2_EL1,     0x0,            "ID_MMFR2_EL1"    , AA32},
-    {ID_MMFR3_EL1,     0x0,            "ID_MMFR3_EL1"    , AA32},
-    {ID_MMFR4_EL1,     0x0,            "ID_MMFR4_EL1"    , AA32},
-    {ID_PFR0_EL1,      0x0,            "ID_PFR0_EL1"     , AA32},
-    {ID_PFR1_EL1,      0x0,            "ID_PFR1_EL1"     , AA32},
-    {MVFR0_EL1,        0x0,            "MVFR0_EL1"       , AA32},
-    {MVFR1_EL1,        0x0,            "MVFR1_EL1"       , AA32},
-    {MVFR2_EL1,        0x0,            "MVFR2_EL1"       , AA32},
-    {PMCEID0_EL0,      0x0,            "PMCEID0_EL0",     PMUV3},
-    {PMCEID1_EL0,      0x0,            "PMCEID1_EL0",     PMUV3},
-    {PMCR_EL0,         0x0,            "PMCR_EL0",        PMUV3},
-    {PMBIDR_EL1,       0x0,            "PMBIDR_EL1"      , SPE },
-    {PMSIDR_EL1,       0x0,            "PMSIDR_EL1"      , SPE },
-    {ERRIDR_EL1,       0x0,            "ERRIDR_EL1"      , RAS },
-    {LORID_EL1,        0x0,            "LORID_EL1"       , LOR }
+    {PMCEID0_EL0,      0x0,            "PMCEID0_EL0     ", PMUV3},
+    {PMCEID1_EL0,      0x0,            "PMCEID1_EL0     ", PMUV3},
+    {PMCR_EL0,         0x0,            "PMCR_EL0        ", PMUV3},
+    {PMBIDR_EL1,       0x0,            "PMBIDR_EL1      ", SPE },
+    {PMSIDR_EL1,       0x0,            "PMSIDR_EL1      ", SPE },
+    {ERRIDR_EL1,       0x0,            "ERRIDR_EL1      ", RAS },
+    {LORID_EL1,        0x0,            "LORID_EL1       ", LOR },
+    {ID_DFR0_EL1,      0x0,            "ID_DFR0_EL1     ", AA32},
+    {ID_ISAR0_EL1,     0x0,            "ID_ISAR0_EL1    ", AA32},
+    {ID_ISAR1_EL1,     0x0,            "ID_ISAR1_EL1    ", AA32},
+    {ID_ISAR2_EL1,     0x0,            "ID_ISAR2_EL1    ", AA32},
+    {ID_ISAR3_EL1,     0x0,            "ID_ISAR3_EL1    ", AA32},
+    {ID_ISAR4_EL1,     0x0,            "ID_ISAR4_EL1    ", AA32},
+    {ID_ISAR5_EL1,     0x0,            "ID_ISAR5_EL1    ", AA32},
+    {ID_MMFR0_EL1,     0x0,            "ID_MMFR0_EL1    ", AA32},
+    {ID_MMFR1_EL1,     0x0,            "ID_MMFR1_EL1    ", AA32},
+    {ID_MMFR2_EL1,     0x0,            "ID_MMFR2_EL1    ", AA32},
+    {ID_MMFR3_EL1,     0x0,            "ID_MMFR3_EL1    ", AA32},
+    {ID_MMFR4_EL1,     0x0,            "ID_MMFR4_EL1    ", AA32},
+    {ID_PFR0_EL1,      0x0,            "ID_PFR0_EL1     ", AA32},
+    {ID_PFR1_EL1,      0x0,            "ID_PFR1_EL1     ", AA32},
+    {MVFR0_EL1,        0x0,            "MVFR0_EL1       ", AA32},
+    {MVFR1_EL1,        0x0,            "MVFR1_EL1       ", AA32},
+    {MVFR2_EL1,        0x0,            "MVFR2_EL1       ", AA32}
 };
 
 uint64_t
@@ -262,7 +262,12 @@ payload(uint32_t num_pe)
       rd_data_array[i] = return_reg_value(reg_list[i].reg_name, reg_list[i].dependency);
       val_print(ACS_PRINT_INFO, "\n       Primary PE Index: %d, ", my_index);
       val_print(ACS_PRINT_INFO, reg_list[i].reg_desc, 0);
-      val_print(ACS_PRINT_INFO, " : 0x%016llx ", rd_data_array[i]);
+
+      if (reg_list[i].dependency == AA32)
+          val_print(ACS_PRINT_INFO, " : 0x%08llx ", rd_data_array[i]);
+      else
+          val_print(ACS_PRINT_INFO, " : 0x%016llx ", rd_data_array[i]);
+
       val_data_cache_ops_by_va((addr_t)(rd_data_array + i), CLEAN_AND_INVALIDATE);
   }
 
@@ -290,9 +295,8 @@ payload(uint32_t num_pe)
       }
   }
 
-  val_print(ACS_PRINT_ERR, "\n       Primary PE Index : %d, ", my_index);
-  val_print(ACS_PRINT_ERR, "MIDR_EL1 : 0x%llx", rd_data_array[1]);
-  val_print(ACS_PRINT_TEST, "\n       Other Cores : ", 0);
+  val_print(ACS_PRINT_TEST, "\n       Primary PE Index    : %d", my_index);
+  val_print(ACS_PRINT_TEST, "\n       Primary PE MIDR_EL1 : 0x%08llx", rd_data_array[1]);
 
   for (i = 0; i < num_pe; i++) {
       uint32_t unique = 1;
@@ -306,14 +310,20 @@ payload(uint32_t num_pe)
               }
           }
           if (unique == 1 && rd_data_array[1] != pe_buffer->reg_data[1]) {
-              val_print(ACS_PRINT_TEST, "0x%llx \n                     ", pe_buffer->reg_data[1]);
-              t = 1;
+              if (t == 0) {
+                  val_print(ACS_PRINT_TEST, "\n       Other Cores         : 0x%08llx      ",
+                                                                        pe_buffer->reg_data[1]);
+                  t = 1;
+              } else {
+                  val_print(ACS_PRINT_TEST, "\n                             0x%08llx      ",
+                                                                        pe_buffer->reg_data[1]);
+                }
            }
       }
   }
 
   if (t == 0) {
-      val_print(ACS_PRINT_TEST, " Identical \n", 0);
+      val_print(ACS_PRINT_TEST, "\n       Other Cores         : Identical       ", 0);
   }
 
   pe_buffer = NULL;
@@ -349,16 +359,28 @@ payload(uint32_t num_pe)
              if (!(pe_buffer->reg_status[reg_index])) {
                  val_print(ACS_PRINT_INFO, "\n        PE Index: %d, ", i);
                  val_print(ACS_PRINT_INFO, reg_list[reg_index].reg_desc, 0);
-                 val_print(ACS_PRINT_INFO, "  : 0x%016llx", pe_buffer->reg_data[reg_index]);
+                 if (reg_list[reg_index].dependency == AA32)
+                     val_print(ACS_PRINT_INFO, "  : 0x%08llx", pe_buffer->reg_data[reg_index]);
+                 else
+                     val_print(ACS_PRINT_INFO, "  : 0x%016llx", pe_buffer->reg_data[reg_index]);
              } else  {
                  val_print(ACS_PRINT_ERR, "\n        PE Index: %d, ", i);
                  val_print(ACS_PRINT_ERR, reg_list[reg_index].reg_desc, 0);
-                 val_print(ACS_PRINT_ERR, "   : 0x%016llx    FAIL\n",
+                 if (reg_list[reg_index].dependency == AA32) {
+                     val_print(ACS_PRINT_ERR, "   : 0x%08llx    FAIL\n",
                                                         pe_buffer->reg_data[reg_index]);
-                 val_print(ACS_PRINT_ERR, "          Masked Primary PE Value : 0x%016llx \n",
+                     val_print(ACS_PRINT_ERR, "          Masked Primary PE Value : 0x%08llx \n",
                                               rd_data_array[reg_index] & (~reg_list[i].reg_mask));
-                 val_print(ACS_PRINT_ERR, "          Masked Current PE Value : 0x%016llx ",
+                     val_print(ACS_PRINT_ERR, "          Masked Current PE Value : 0x%08llx ",
                                          pe_buffer->reg_data[reg_index] & (~reg_list[i].reg_mask));
+                 } else {
+                     val_print(ACS_PRINT_ERR, "   : 0x%016llx    FAIL\n",
+                                                        pe_buffer->reg_data[reg_index]);
+                     val_print(ACS_PRINT_ERR, "          Masked Primary PE Value : 0x%016llx \n",
+                                              rd_data_array[reg_index] & (~reg_list[i].reg_mask));
+                     val_print(ACS_PRINT_ERR, "          Masked Current PE Value : 0x%016llx ",
+                                         pe_buffer->reg_data[reg_index] & (~reg_list[i].reg_mask));
+                   }
                  reg_fail = reg_fail + 1;
              }
           }

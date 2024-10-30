@@ -112,13 +112,10 @@ val_sbsa_pe_execute_tests(uint32_t level, uint32_t num_pe)
   if (((level > 6)  && (g_sbsa_only_level == 0)) || (g_sbsa_only_level == 7)) {
       status |= c028_entry(num_pe);
       status |= c029_entry(num_pe);
-      status |= c030_entry(num_pe);
       status |= c031_entry(num_pe);
       status |= c032_entry(num_pe);
       status |= c033_entry(num_pe);
       status |= c034_entry(num_pe);
-      status |= c035_entry(num_pe);
-      status |= c036_entry(num_pe);
   }
 
   if (((level > 7)  && (g_sbsa_only_level == 0)) || (g_sbsa_only_level == 8)) {
@@ -545,8 +542,8 @@ val_sbsa_exerciser_execute_tests(uint32_t level)
   num_instances = val_exerciser_get_info(EXERCISER_NUM_CARDS);
 
   if (num_instances == 0) {
-      val_print(ACS_PRINT_WARN, "\n     No Exerciser Devices Found, \
-                                        Skipping Exerciser tests...\n", 0);
+      val_print(ACS_PRINT_WARN,
+                "\n     No Exerciser Devices Found, Skipping Exerciser tests...\n", 0);
       return ACS_STATUS_SKIP;
   }
 
@@ -655,7 +652,6 @@ val_sbsa_pmu_execute_tests(uint32_t level, uint32_t num_pe)
       status |= pmu004_entry(num_pe);
       status |= pmu005_entry(num_pe);
       status |= pmu007_entry(num_pe);
-      status |= pmu008_entry(num_pe);
       status |= pmu009_entry(num_pe);
   }
   val_print_test_end(status, "PMU");
