@@ -75,12 +75,10 @@ val_pmu_set_node_coresight_complaint(uint32_t flag, uint32_t node_index)
 
   if (g_pmu_info_table == NULL) {
       val_print(ACS_PRINT_WARN, "\n   APMT info table not found", 0);
-      return 0;
   }
 
   if (node_index > g_pmu_info_table->pmu_count) {
       val_print(ACS_PRINT_WARN, "\n   Invalid Node index ", 0);
-      return 0;
   }
 
   entry = &g_pmu_info_table->info[node_index];
