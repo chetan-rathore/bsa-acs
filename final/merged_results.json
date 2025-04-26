@@ -1,0 +1,2701 @@
+{
+    "Suite_Name: acs_info": {
+        "System Info": {
+            "Firmware Version": "UEFI Firmware v1.37",
+            "SoC Family": "Raspberry Pi",
+            "System Name": "Raspberry Pi 4 Model B",
+            "Vendor": "Raspberry Pi Foundation",
+            "Summary Generated On": "2025-04-26 10:05:00",
+            "ACS version": "ACS v25.04_3.0.1",
+            "SRS version": "SRS 3.0",
+            "BSA version": "BSA v1.1",
+            "BBR version": "BBR v2.1",
+            "EBBR version": "EBBR v2.2.0",
+            "BBSR version": "BBSR v1.3",
+            "Band": "SystemReady Devicetree band",
+            "Device Tree Version": "v0.4",
+            "FW source code": "Unknown",
+            "Flashing instructions": "Unknown",
+            "product website": "Unknown",
+            "Tested operated Systems": "Unknown",
+            "Testlab assistance": "Unknown",
+            "UEFI Version": "UEFI v2.70 (https://github.com/pftf/RPi4, 0x00010000)"
+        },
+        "ACS Results Summary": {
+            "Band": "SystemReady Devicetree band",
+            "Date": "2025-04-26 10:05:00",
+            "Suite_Name: FWTS_compliance": "Compliant",
+            "Suite_Name: Capsule Update_compliance": "Not Compliant: Failed 1",
+            "Suite_Name: BBSR-SCT_compliance": "Not Compliant: not run",
+            "Suite_Name: SCT_compliance": "Not Compliant: not run",
+            "Suite_Name: POST_SCRIPT_compliance": "Not Compliant: Failed 5",
+            "Suite_Name: ETHTOOL_TEST_compliance": "Not Compliant: Failed 2",
+            "Suite_Name: DT_VALIDATE_compliance": "Not Compliant: Failed 1",
+            "Suite_Name: OS_TEST_compliance": "Not Compliant: not run",
+            "Suite_Name: DT_KSELFTEST_compliance": "Compliant",
+            "Suite_Name: BBSR-FWTS_compliance": "Not Compliant: not run",
+            "Suite_Name: READ_WRITE_CHECK_BLK_DEVICES_compliance": "Compliant",
+            "Suite_Name: BBSR-TPM_compliance": "Not Compliant: not run",
+            "Suite_Name: PSCI_compliance": "Compliant",
+            "Suite_Name: BSA_compliance": "Not Compliant: Failed 9",
+            "Overall Compliance Result": "Not Compliant (missing suite(s): SCT, OS_TEST; non-waived fails in suite(s): Capsule Update, ETHTOOL_TEST, DT_VALIDATE)",
+            "BBSR extension compliance results": "Not Compliant (missing suite(s): BBSR-TPM, BBSR-FWTS, BBSR-SCT)"
+        }
+    },
+    "Suite_Name: BSA": [
+        {
+            "Test_suite": "PE",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "Check Arch symmetry across PE",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "2",
+                    "sub_Test_Description": "Check for number of PE",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "3",
+                    "sub_Test_Description": "Check for AdvSIMD and FP support",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "4",
+                    "sub_Test_Description": "Check PE 4KB Granule Support",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "6",
+                    "sub_Test_Description": "Check Cryptographic extensions",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_06"
+                },
+                {
+                    "sub_Test_Number": "7",
+                    "sub_Test_Description": "Check Little Endian support",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_07"
+                },
+                {
+                    "sub_Test_Number": "8",
+                    "sub_Test_Description": "Check EL1 and EL0 implementation",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_08"
+                },
+                {
+                    "sub_Test_Number": "9",
+                    "sub_Test_Description": "Check for PMU and PMU counters",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_09"
+                },
+                {
+                    "sub_Test_Number": "10",
+                    "sub_Test_Description": "Check PMU Overflow signal",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "11",
+                    "sub_Test_Description": "Check num of Breakpoints and type",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_11"
+                },
+                {
+                    "sub_Test_Number": "12",
+                    "sub_Test_Description": "Check Synchronous Watchpoints",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_12"
+                },
+                {
+                    "sub_Test_Number": "13",
+                    "sub_Test_Description": "Check CRC32 instruction support",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_PE_13"
+                },
+                {
+                    "sub_Test_Number": "14",
+                    "sub_Test_Description": "Check PAuth if implementation",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_PE_15"
+                },
+                {
+                    "sub_Test_Number": "16",
+                    "sub_Test_Description": "Check SVE2 for v9 PE",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_PE_14"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 5,
+                "total_FAILED": 7,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 2,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite": "Memory Map",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "102",
+                    "sub_Test_Description": "Mem Access Response in finite time",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "103",
+                    "sub_Test_Description": "PE must access all NS addr space",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "104",
+                    "sub_Test_Description": "Addressability",
+                    "sub_test_result": "PASSED"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 3,
+                "total_FAILED": 0,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite": "GIC",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "201",
+                    "sub_Test_Description": "Check GIC version",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "202",
+                    "sub_Test_Description": "Check GICv2 Valid Configuration",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "205",
+                    "sub_Test_Description": "Non-secure SGIs are implemented",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_GIC_05"
+                },
+                {
+                    "sub_Test_Number": "206",
+                    "sub_Test_Description": "Check EL1-Phy timer PPI assignment",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "207",
+                    "sub_Test_Description": "Check EL1-Virt timer PPI assignment",
+                    "sub_test_result": "PASSED"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 4,
+                "total_FAILED": 1,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite": "Timer",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "401",
+                    "sub_Test_Description": "Check Counter Frequency",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "402",
+                    "sub_Test_Description": "SYS Timer if PE Timer not ON",
+                    "sub_test_result": "FAILED",
+                    "RULES FAILED": "B_TIME_06"
+                },
+                {
+                    "sub_Test_Number": "403",
+                    "sub_Test_Description": "Memory mapped timer check",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_TIME_07, B_TIME_10"
+                },
+                {
+                    "sub_Test_Number": "404",
+                    "sub_Test_Description": "Generate Mem Mapped SYS Timer Intr",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_TIME_08"
+                },
+                {
+                    "sub_Test_Number": "405",
+                    "sub_Test_Description": "Restore PE timer on PE wake up",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_TIME_09"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 1,
+                "total_FAILED": 1,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 3,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite": "Wakeup semantic",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "501",
+                    "sub_Test_Description": "Wake from EL1 PHY Timer Int",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "502",
+                    "sub_Test_Description": "Wake from EL1 VIR Timer Int",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "503",
+                    "sub_Test_Description": "Wake from EL2 PHY Timer Int",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "504",
+                    "sub_Test_Description": "Wake from Watchdog WS0 Int",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_WAK_01, B_WAK_02, B_WAK_03, B_WAK_04, B_WAK_05 B_WAK_06, B_WAK_07, B_WAK_10, B_WAK_11"
+                },
+                {
+                    "sub_Test_Number": "505",
+                    "sub_Test_Description": "Wake from System Timer Int",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_WAK_01, B_WAK_02, B_WAK_03, B_WAK_04, B_WAK_05 B_WAK_06, B_WAK_07, B_WAK_10, B_WAK_11"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 3,
+                "total_FAILED": 0,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 2,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite": "Peripheral",
+            "Waivable": "yes",
+            "SRS scope": "Recommended",
+            "Main Readiness Grouping": "Physical readiness",
+            "subtests": [
+                {
+                    "sub_Test_Number": "601",
+                    "sub_Test_Description": "USB CTRL Interface",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "602",
+                    "sub_Test_Description": "Check SATA CTRL Interface",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_PER_03"
+                },
+                {
+                    "sub_Test_Number": "603",
+                    "sub_Test_Description": "Check Arm BSA UART register offsets",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "604",
+                    "sub_Test_Description": "Check Arm GENERIC UART Interrupt",
+                    "sub_test_result": "PASSED"
+                },
+                {
+                    "sub_Test_Number": "606",
+                    "sub_Test_Description": "16550 compatible UART",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_PER_05"
+                },
+                {
+                    "sub_Test_Number": "605",
+                    "sub_Test_Description": "Memory Attribute of DMA",
+                    "sub_test_result": "SKIPPED",
+                    "RULES SKIPPED": "B_PER_09, B_PER_10"
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 3,
+                "total_FAILED": 0,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 3,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Suite_summary": {
+                "total_PASSED": 19,
+                "total_FAILED": 9,
+                "total_ABORTED": 0,
+                "total_SKIPPED": 10,
+                "total_WARNINGS": 0
+            }
+        }
+    ],
+    "Suite_Name: FWTS": {
+        "test_results": [
+            {
+                "Test_suite": "dt_base",
+                "Test_suite_Description": "Base device tree validity check",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "runtime readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 3",
+                        "sub_Test_Description": "Check device tree presence",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 1, Device tree present"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "2 of 3",
+                        "sub_Test_Description": "Check device tree baseline validity",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 2, Device tree data valid"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "3 of 3",
+                        "sub_Test_Description": "Check device tree warnings",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 1,
+                            "warning_reasons": [
+                                "Test 3, Some warnings from dtc. Run command \"dtc -I fs -O dts -o my.dts /sys/firmware/devicetree/base\" for further review: /dev/null: Warning (ranges_format): /chosen:ranges: empty \"ranges\" property but its #address-cells (1) differs from / (2) /dev/null: Warning (unit_address_vs_reg): /scb: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /soc/gpiomem: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /soc /axiperf: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /emmc2bus: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /axi/vc_mem: node has a reg or ranges property, but no unit name /dev/null: Warning (unit_address_vs_reg): /v3dbus: node has a reg or ranges property, but no unit name /dev/null: Warning (simple_bus_reg): /soc/gpiomem: simple-bus unit address format error, expected \"7e200000\" /dev/null: Warning (simple_bus_reg): /soc/power: missing or empty reg /ranges property /dev/null: Warning (simple_bus_reg): /soc/fb: missing or empty reg/ranges property /dev/null: Warning (simple_bus_reg): /soc/i2c0mux: missing or empty reg/ranges property /dev/null: Warning (simple_bus_reg): /soc/sound: missing or empty reg/ranges property /dev/null: Warning (simple_bus_reg): /soc /firmware: missing or empty reg/ranges property /dev/null: Warning (simple_bus_reg): /soc/axiperf: simple-bus unit address format error, expected \"7e009800\" /dev/null: Warning (simple_bus_reg): /v3dbus/v3d@7ec04000: simple-bus unit address format error, expected \"7ec00000\" /dev/null: Warning (avoid_default_addr_size): /axi/vc_mem: Relying on default #address-cells value /dev/null: Warning (avoid_default_addr_size): /axi/vc_mem: Relying on default #size-cells value /dev/null: Warning (avoid_unnecessary_addr_size): Failed prerequisite 'avoid_default_addr_size' /dev/null: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size' /dev/null: Warning (clocks_property): /__symbols__:clocks: property size (21) is invalid, expected multiple of 4 /dev/null: Warning (gpios_property): /aliases:gpio: property size (19) is invalid, expected multiple of 4 /dev/null: Warning (gpios_property): /__symbols__:gpio: property size (19) is invalid, expected multiple of 4"
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 2,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 0,
+                    "total_warnings": 1
+                }
+            },
+            {
+                "Test_suite": "esrt",
+                "Test_suite_Description": "Sanity check UEFI ESRT Table.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "maintenance readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "Test 1 of 1",
+                        "sub_Test_Description": "Aborted test",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 1,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "abort_reasons": [
+                                "Cannot find ESRT table, firmware seems not supported. Aborted.",
+                                "Aborted test, initialisation failed."
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 0,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 1,
+                    "total_skipped": 0,
+                    "total_warnings": 0
+                }
+            },
+            {
+                "Test_suite": "uefibootpath",
+                "Test_suite_Description": "Sanity check for UEFI Boot Path Boot####.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "runtime readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 1",
+                        "sub_Test_Description": "Test UEFI Boot Path Boot####.",
+                        "sub_test_result": {
+                            "PASSED": 9,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 1, Check bootpath Boot0000 test passed.",
+                                "Test 1, Check bootpath Boot0001 test passed.",
+                                "Test 1, Check bootpath Boot0002 test passed.",
+                                "Test 1, Check bootpath Boot0003 test passed.",
+                                "Test 1, Check bootpath Boot0004 test passed.",
+                                "Test 1, Check bootpath Boot0005 test passed.",
+                                "Test 1, Check bootpath Boot0006 test passed.",
+                                "Test 1, Check bootpath Boot0007 test passed.",
+                                "Test 1, Check bootpath Boot0008 test passed."
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 9,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 0,
+                    "total_warnings": 0
+                }
+            },
+            {
+                "Test_suite": "uefivarinfo",
+                "Test_suite_Description": "UEFI variable info query.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "maintenance readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 1",
+                        "sub_Test_Description": "UEFI variable info query.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 0,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 0,
+                    "total_warnings": 0
+                }
+            },
+            {
+                "Test_suite": "uefirtmisc",
+                "Test_suite_Description": "UEFI miscellaneous runtime service interface tests.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "runtime readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 4",
+                        "sub_Test_Description": "Test for UEFI miscellaneous runtime service interfaces.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 5,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 1, UEFI runtime service GetNextHighMonotonicCount interface test passed. Testing UEFI runtime service QueryCapsuleCapabilities interface."
+                            ],
+                            "skip_reasons": [
+                                "Test 1, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x0: cannot test.",
+                                "Test 1, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x10000: cannot test.",
+                                "Test 1, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x30000: cannot test.",
+                                "Test 1, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x50000: cannot test.",
+                                "Test 1, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x70000: cannot test."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "2 of 4",
+                        "sub_Test_Description": "Stress test for UEFI miscellaneous runtime service interfaces.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 5,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 2, UEFI runtime service GetNextHighMonotonicCount interface test passed. Stress testing UEFI runtime service QueryCapsuleCapabilities interface."
+                            ],
+                            "skip_reasons": [
+                                "Test 2, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x0: cannot test.",
+                                "Test 2, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x10000: cannot test.",
+                                "Test 2, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x30000: cannot test.",
+                                "Test 2, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x50000: cannot test.",
+                                "Test 2, Not support the UEFI QueryCapsuleCapabilities runtime interface with flag value 0x70000: cannot test."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "3 of 4",
+                        "sub_Test_Description": "Test GetNextHighMonotonicCount with invalid NULL parameter.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 3, Test with invalid NULL parameter returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "4 of 4",
+                        "sub_Test_Description": "Test UEFI miscellaneous runtime services unsupported status.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 4, GetNextHighMonotonicCount runtime service supported, skip test."
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 3,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 11,
+                    "total_warnings": 0
+                }
+            },
+            {
+                "Test_suite": "uefirtvariable",
+                "Test_suite_Description": "UEFI Runtime service variable interface tests.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "runtime readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 9",
+                        "sub_Test_Description": "Test UEFI RT service get variable interface.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 1, UEFI runtime service GetVariable interface test passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "2 of 9",
+                        "sub_Test_Description": "Test UEFI RT service get next variable name interface.",
+                        "sub_test_result": {
+                            "PASSED": 4,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 2, The runtime service GetNextVariableName interface function test passed. Check the GetNextVariableName returned value of VariableNameSize is equal to the length of VariableName.",
+                                "Test 2, Check the GetNextVariableName returned value of VariableNameSize is equal to the length of VariableName passed. Test GetNextVariableName interface returns unique variables.",
+                                "Test 2, Test GetNextVariableName interface returns unique variables passed. The GetNextVariableName interface conformance tests.",
+                                "Test 2, The runtime service GetNextVariableName interface conformance tests passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "3 of 9",
+                        "sub_Test_Description": "Test UEFI RT service set variable interface.",
+                        "sub_test_result": {
+                            "PASSED": 8,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 3, SetVariable on two different GUIDs and the same variable name passed. Testing SetVariable on the same and different variable data.",
+                                "Test 3, SetVariable on the same and different variable data passed. Testing SetVariable on similar variable name.",
+                                "Test 3, SetVariable on similar variable name passed. Testing SetVariable on DataSize is 0.",
+                                "Test 3, SetVariable on DataSize is 0 passed. Testing SetVariable on Attributes is 0.",
+                                "Test 3, SetVariable on Attributes is 0 passed. Testing SetVariable on Invalid Attributes.",
+                                "Test 3, SetVariable on Invalid Attributes passed. Testing SetVariable with both Authenticated Attributes set.",
+                                "Test 3, Testing SetVariable with both Authenticated Attributes set passed. Testing SetVariable with EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS Attributes.",
+                                "Test 3, Testing SetVariable with with EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS Attributes passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "4 of 9",
+                        "sub_Test_Description": "Test UEFI RT service query variable info interface.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 4, UEFI runtime service query variable info interface test passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "5 of 9",
+                        "sub_Test_Description": "Test UEFI RT service variable interface stress test.",
+                        "sub_test_result": {
+                            "PASSED": 2,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 5, GetVariable on getting the variable multiple times passed. Testing GetNextVariableName on getting the variable multiple times.",
+                                "Test 5, GetNextVariableName on getting the next variable name multiple times passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "6 of 9",
+                        "sub_Test_Description": "Test UEFI RT service set variable interface stress test.",
+                        "sub_test_result": {
+                            "PASSED": 4,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 6, SetVariable on setting the variable with the same data multiple times passed. Testing SetVariable on setting the variable with different data 40 times.",
+                                "Test 6, Testing SetVariable on setting the variable with different data multiple times passed. Testing SetVariable on setting the variable with different name 40 times.",
+                                "Test 6, Testing SetVariable on setting the variable with different name multiple times passed. Testing SetVariable on setting the variable with different name and data 40 times.",
+                                "Test 6, Testing SetVariable on setting the variable with different name and data multiple times passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "7 of 9",
+                        "sub_Test_Description": "Test UEFI RT service query variable info interface stress test.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 7, UEFI runtime service query variable info interface stress test passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "8 of 9",
+                        "sub_Test_Description": "Test UEFI RT service get variable interface, invalid parameters.",
+                        "sub_test_result": {
+                            "PASSED": 5,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 8, GetVariable with NULL variable name returned error EFI_INVALID_PARAMETER as expected. Testing GetVariable with NULL vendor GUID.",
+                                "Test 8, GetVariable with NULL vendor GUID returned error EFI_INVALID_PARAMETER as expected. Testing GetVariable with NULL datasize.",
+                                "Test 8, GetVariable with NULL datasize returned error EFI_INVALID_PARAMETER as expected. Testing GetVariable with NULL data.",
+                                "Test 8, GetVariable with NULL data returned error EFI_INVALID_PARAMETER as expected. Testing GetVariable with NULL variable name, vendor GUID, datasize and data.",
+                                "Test 8, GetVariable with NULL variable name, vendor GUID, datasize and data returned error EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "9 of 9",
+                        "sub_Test_Description": "Test UEFI RT variable services unsupported status.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 4,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 9, SetVariable runtime service supported, skip test.",
+                                "Test 9, GetVariable runtime service supported, skip test.",
+                                "Test 9, GetNextVarName runtime service supported, skip test.",
+                                "Test 9, QueryVarInfo runtime service supported, skip test."
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 26,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 4,
+                    "total_warnings": 0
+                }
+            },
+            {
+                "Test_suite": "uefirttime",
+                "Test_suite_Description": "UEFI Runtime service time interface tests.",
+                "Waivable": "no",
+                "SRS scope": "Required",
+                "Main Readiness Grouping": "runtime readiness",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get time interface.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 1, UEFI runtime service GetTime interface test passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "2 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get time interface, NULL time parameter.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 2, UEFI runtime service GetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "3 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get time interface, NULL time and NULL",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 3, UEFI runtime service GetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "4 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 4, UEFI runtime service SetTime interface test passed."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "5 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid year 1899.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 5, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "6 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid year 10000.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 6, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "7 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid month 0.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 7, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "8 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid month 13.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 8, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "9 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid day 0.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 9, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "10 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid day 32.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 10, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "11 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid hour 24.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 11, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "12 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid minute 60.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 12, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "13 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid second 60.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 13, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "14 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid nanosecond",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 14, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "15 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid timezone -1441.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 15, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "16 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set time interface, invalid timezone 1441.",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 16, UEFI runtime service SetTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "17 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get wakeup time interface.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 17, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "18 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get wakeup time interface, NULL enabled",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 18, UEFI runtime service GetTimeWakeupTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "19 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get wakeup time interface, NULL pending",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 19, UEFI runtime service GetTimeWakeupTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "20 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get wakeup time interface, NULL time",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 20, UEFI runtime service GetTimeWakeupTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "21 of 36",
+                        "sub_Test_Description": "Test UEFI RT service get wakeup time interface, NULL enabled,",
+                        "sub_test_result": {
+                            "PASSED": 1,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "pass_reasons": [
+                                "Test 21, UEFI runtime service GetTimeWakeupTime interface test passed, returned EFI_INVALID_PARAMETER as expected."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "22 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 22, Skipping test, SetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "23 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, NULL time",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 23, Skipping test, SetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "24 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid year",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 24, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "25 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid year",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 25, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "26 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid month 0.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 26, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "27 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid month 13.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 27, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "28 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid day 0.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 28, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "29 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid day 32.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 29, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "30 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid hour 24.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 30, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "31 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid minute",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 31, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "32 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid second",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 32, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "33 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 33, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "34 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid timezone",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 34, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "35 of 36",
+                        "sub_Test_Description": "Test UEFI RT service set wakeup time interface, invalid timezone",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 1,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 35, Skipping test, GetWakeupTime runtime service is not supported on this platform."
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "36 of 36",
+                        "sub_Test_Description": "Test UEFI RT time services unsupported status.",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 4,
+                            "WARNINGS": 0,
+                            "skip_reasons": [
+                                "Test 36, GetTime runtime service supported, skip test.",
+                                "Test 36, SetTime runtime service supported, skip test.",
+                                "Test 36, SetWakeupTime runtime service supported, skip test.",
+                                "Test 36, GetWakeupTime runtime service supported, skip test."
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_passed": 20,
+                    "total_failed": 0,
+                    "total_failed_with_waiver": 0,
+                    "total_aborted": 0,
+                    "total_skipped": 19,
+                    "total_warnings": 0
+                }
+            }
+        ],
+        "suite_summary": {
+            "total_passed": 60,
+            "total_failed": 0,
+            "total_failed_with_waiver": 0,
+            "total_aborted": 1,
+            "total_skipped": 34,
+            "total_warnings": 1
+        }
+    },
+    "Suite_Name: POST_SCRIPT": {
+        "test_results": [
+            {
+                "Test_suite": "post scripts checks",
+                "Test_suite_Description": "Post script checks from post-script.log",
+                "subtests": [
+                    {
+                        "sub_Test_Number": "1",
+                        "sub_Test_Description": "WARNING run_identify: Could not identify...",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 1,
+                            "warning_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "2",
+                        "sub_Test_Description": "ERROR check_file_contains: Could not find `EFI_SYSTEM_RESOURCE_TABLE:' in `/mnt/acs_results_template/acs_results/app_output/CapsuleApp_ESRT_table_info.log'",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 1,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "fail_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "3",
+                        "sub_Test_Description": "ERROR if_contains: `ESRT - Not Found' found in `/mnt/acs_results_template/acs_results/app_output/CapsuleApp_ESRT_table_info.log' at line 4: `ESRT - Not Found'",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 1,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "fail_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "4",
+                        "sub_Test_Description": "ERROR check_capsuleapp_esrt: No GUID found in `/mnt/acs_results_template/acs_results/app_output/CapsuleApp_ESRT_table_info.log'",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 1,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "fail_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "5",
+                        "sub_Test_Description": "WARNING if_contains: `Aborted test' found in `/mnt/acs_results_template/acs_results/fwts/FWTSResults.log' at line 66: `Aborted test, initialisation failed.'",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 0,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 1,
+                            "warning_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "6",
+                        "sub_Test_Description": "ERROR check_dir: `/mnt/acs_results_template/acs_results/linux_dump/firmware/efi/esrt/' missing",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 1,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "fail_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    },
+                    {
+                        "sub_Test_Number": "7",
+                        "sub_Test_Description": "ERROR check_dir: `/mnt/acs_results_template/acs_results/sct_results/' missing",
+                        "sub_test_result": {
+                            "PASSED": 0,
+                            "FAILED": 1,
+                            "ABORTED": 0,
+                            "SKIPPED": 0,
+                            "WARNINGS": 0,
+                            "fail_reasons": [
+                                "N/A"
+                            ]
+                        }
+                    }
+                ],
+                "test_suite_summary": {
+                    "total_PASSED": 0,
+                    "total_FAILED": 5,
+                    "total_ABORTED": 0,
+                    "total_SKIPPED": 0,
+                    "total_WARNINGS": 2
+                }
+            }
+        ],
+        "suite_summary": {
+            "total_passed": 0,
+            "total_failed": 5,
+            "total_failed_with_waiver": 0,
+            "total_aborted": 0,
+            "total_skipped": 0,
+            "total_warnings": 2
+        }
+    },
+    "Suite_Name: Standalone": [
+        {
+            "Test_suite_name": "DTValidation",
+            "Test_suite_description": "Validation for device tree",
+            "Test_case": "dt_kselftest",
+            "Test_case_description": "Device Tree kselftests",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "/cam1_regulator",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "2",
+                    "sub_Test_Description": "/cam_dummy_reg",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "3",
+                    "sub_Test_Description": "/chosen",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "4",
+                    "sub_Test_Description": "/clk-108M",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "5",
+                    "sub_Test_Description": "/clk-27M",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "6",
+                    "sub_Test_Description": "/clocks/clk-osc",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "7",
+                    "sub_Test_Description": "/clocks/clk-usb",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "8",
+                    "sub_Test_Description": "/cpus/cpu@0",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "9",
+                    "sub_Test_Description": "/cpus/cpu@1",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "10",
+                    "sub_Test_Description": "/cpus/cpu@2",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "11",
+                    "sub_Test_Description": "/cpus/cpu@3",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "12",
+                    "sub_Test_Description": "/cpus/l2-cache0",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "13",
+                    "sub_Test_Description": "/emmc2bus",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "14",
+                    "sub_Test_Description": "/emmc2bus/mmc@7e340000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "15",
+                    "sub_Test_Description": "/fixedregulator_3v3",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "16",
+                    "sub_Test_Description": "/fixedregulator_5v0",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "17",
+                    "sub_Test_Description": "/gpu",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "18",
+                    "sub_Test_Description": "/leds",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "19",
+                    "sub_Test_Description": "/phy",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "20",
+                    "sub_Test_Description": "/psci",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "21",
+                    "sub_Test_Description": "/reserved-memory/linux,cma",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "22",
+                    "sub_Test_Description": "/reserved-memory/nvram@0",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "23",
+                    "sub_Test_Description": "/reserved-memory/nvram@1",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "24",
+                    "sub_Test_Description": "/scb",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "25",
+                    "sub_Test_Description": "/scb/codec@7eb10000",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "26",
+                    "sub_Test_Description": "/scb/dma@7e007b00",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "27",
+                    "sub_Test_Description": "/scb/ethernet@7d580000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "28",
+                    "sub_Test_Description": "/scb/ethernet@7d580000/mdio@e14",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "29",
+                    "sub_Test_Description": "/scb/pcie@7d500000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "30",
+                    "sub_Test_Description": "/sd_io_1v8_reg",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "31",
+                    "sub_Test_Description": "/sd_vcc_reg",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "32",
+                    "sub_Test_Description": "/soc",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "33",
+                    "sub_Test_Description": "/soc/aux@7e215000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "34",
+                    "sub_Test_Description": "/soc/avs-monitor@7d5d2000",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "35",
+                    "sub_Test_Description": "/soc/avs-monitor@7d5d2000/thermal",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "36",
+                    "sub_Test_Description": "/soc/clock@7ef00000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "37",
+                    "sub_Test_Description": "/soc/cprman@7e101000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "38",
+                    "sub_Test_Description": "/soc/dma@7e007000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "39",
+                    "sub_Test_Description": "/soc/firmware",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "40",
+                    "sub_Test_Description": "/soc/firmware/clocks",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "41",
+                    "sub_Test_Description": "/soc/firmware/gpio",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "42",
+                    "sub_Test_Description": "/soc/firmware/reset",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "43",
+                    "sub_Test_Description": "/soc/firmware/vcio",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "44",
+                    "sub_Test_Description": "/soc/gpio@7e200000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "45",
+                    "sub_Test_Description": "/soc/gpiomem",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "46",
+                    "sub_Test_Description": "/soc/hdmi@7ef00700",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "47",
+                    "sub_Test_Description": "/soc/hdmi@7ef05700",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "48",
+                    "sub_Test_Description": "/soc/hvs@7e400000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "49",
+                    "sub_Test_Description": "/soc/i2c@7ef04500",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "50",
+                    "sub_Test_Description": "/soc/i2c@7ef09500",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "51",
+                    "sub_Test_Description": "/soc/interrupt-controller@40041000",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "52",
+                    "sub_Test_Description": "/soc/interrupt-controller@7ef00100",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "53",
+                    "sub_Test_Description": "/soc/local_intc@40000000",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "54",
+                    "sub_Test_Description": "/soc/mailbox@7e00b840",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "55",
+                    "sub_Test_Description": "/soc/mailbox@7e00b880",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "56",
+                    "sub_Test_Description": "/soc/mmcnr@7e300000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "57",
+                    "sub_Test_Description": "/soc/pixelvalve@7e206000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "58",
+                    "sub_Test_Description": "/soc/pixelvalve@7e207000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "59",
+                    "sub_Test_Description": "/soc/pixelvalve@7e20a000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "60",
+                    "sub_Test_Description": "/soc/pixelvalve@7e216000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "61",
+                    "sub_Test_Description": "/soc/pixelvalve@7ec12000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "62",
+                    "sub_Test_Description": "/soc/power",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "63",
+                    "sub_Test_Description": "/soc/rng@7e104000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "64",
+                    "sub_Test_Description": "/soc/serial@7e201000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "65",
+                    "sub_Test_Description": "/soc/serial@7e215040",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "66",
+                    "sub_Test_Description": "/soc/serial@7e215040/bluetooth",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "67",
+                    "sub_Test_Description": "/soc/txp@7e004000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "68",
+                    "sub_Test_Description": "/soc/usb@7e980000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "69",
+                    "sub_Test_Description": "/soc/watchdog@7e100000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "70",
+                    "sub_Test_Description": "/timer",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "71",
+                    "sub_Test_Description": "/v3dbus",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "72",
+                    "sub_Test_Description": "/v3dbus/v3d@7ec04000",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 52,
+                "total_FAILED": 0,
+                "total_SKIPPED": 20,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite_name": "Capsule Update",
+            "Test_suite_description": "Tests for automatic capsule update",
+            "Test_case": "capsule_update",
+            "Test_case_description": "Capsule Update",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "Testing signed_capsule.bin OD update",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 1,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "fail_reasons": [
+                            "signed_capsule.bin not present"
+                        ],
+                        "waiver_reason": ""
+                    }
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 0,
+                "total_FAILED": 1,
+                "total_SKIPPED": 0,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite_name": "DTValidation",
+            "Test_suite_description": "Validation for device tree",
+            "Test_case": "dt_validate",
+            "Test_case_description": "Device Tree Validation",
+            "subtests": [],
+            "test_suite_summary": {
+                "total_PASSED": 0,
+                "total_FAILED": 0,
+                "total_SKIPPED": 0,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite_name": "Network",
+            "Test_suite_description": "Network validation",
+            "Test_case": "ethtool_test",
+            "Test_case_description": "Ethernet Tool Tests",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "Detection of Ethernet Interfaces: eth0",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "2",
+                    "sub_Test_Description": "Bringing down all Ethernet interfaces",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "3",
+                    "sub_Test_Description": "Bring up interface eth0",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "4",
+                    "sub_Test_Description": "Link not detected on eth0",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 1,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "5",
+                    "sub_Test_Description": "Self-test on eth0 (Result not found)",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 1,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "6",
+                    "sub_Test_Description": "Ping to router/gateway on eth0",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "7",
+                    "sub_Test_Description": "Ping to www.arm.com on eth0",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "waiver_reason": ""
+                    }
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 3,
+                "total_FAILED": 2,
+                "total_SKIPPED": 2,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite_name": "Boot sources",
+            "Test_suite_description": "Checks for boot sources",
+            "Test_case": "read_write_check_blk_devices",
+            "Test_case_description": "Read/Write Check on Block Devices",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "Read check on Partition /dev/sda1",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "pass_reasons": [
+                            "INFO: Block read on /dev/sda1 part_guid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7 successful"
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "2",
+                    "sub_Test_Description": "Write check on Partition /dev/sda1",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "skip_reasons": [
+                            "User did not choose the prompt"
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "3",
+                    "sub_Test_Description": "Read check on Partition /dev/sdb1",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "pass_reasons": [
+                            "INFO: Block read on /dev/sdb1 part_guid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7 successful"
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "4",
+                    "sub_Test_Description": "Write check on Partition /dev/sdb1",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "skip_reasons": [
+                            "INFO: /dev/sdb1 is mounted, skipping write test."
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "5",
+                    "sub_Test_Description": "Read check on Partition /dev/sdb2",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "pass_reasons": [
+                            "INFO: Block read on /dev/sdb2 part_guid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4 successful"
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "6",
+                    "sub_Test_Description": "Write check on Partition /dev/sdb2",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "skip_reasons": [
+                            "INFO: /dev/sdb2 is mounted, skipping write test."
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "7",
+                    "sub_Test_Description": "Read check on Partition /dev/mmcblk0p1",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "pass_reasons": [
+                            "INFO: Block read on /dev/mmcblk0p1 mbr_part_id = 0xC successful"
+                        ],
+                        "waiver_reason": ""
+                    }
+                },
+                {
+                    "sub_Test_Number": "8",
+                    "sub_Test_Description": "Write check on Partition /dev/mmcblk0p1",
+                    "sub_test_result": {
+                        "PASSED": 0,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 1,
+                        "WARNINGS": 0,
+                        "skip_reasons": [
+                            "User did not choose the prompt"
+                        ],
+                        "waiver_reason": ""
+                    }
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 4,
+                "total_FAILED": 0,
+                "total_SKIPPED": 4,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        },
+        {
+            "Test_suite_name": "PSCI",
+            "Test_suite_description": "PSCI version check",
+            "Test_case": "psci_check",
+            "Test_case_description": "PSCI compliance",
+            "subtests": [
+                {
+                    "sub_Test_Number": "1",
+                    "sub_Test_Description": "PSCI version checker(1.0 or above)",
+                    "sub_test_result": {
+                        "PASSED": 1,
+                        "FAILED": 0,
+                        "FAILED_WITH_WAIVER": 0,
+                        "ABORTED": 0,
+                        "SKIPPED": 0,
+                        "WARNINGS": 0,
+                        "pass_reasons": [
+                            "PSCI version 1.1 >= 1.0"
+                        ],
+                        "waiver_reason": ""
+                    }
+                }
+            ],
+            "test_suite_summary": {
+                "total_PASSED": 1,
+                "total_FAILED": 0,
+                "total_SKIPPED": 0,
+                "total_ABORTED": 0,
+                "total_WARNINGS": 0
+            }
+        }
+    ]
+}
