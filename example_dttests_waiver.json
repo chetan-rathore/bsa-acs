@@ -1,0 +1,55 @@
+{
+    "Suites": [
+      {
+        "Suite": "Standalone",
+        "TestSuites": [
+          {
+            "TestCase": {
+              "Test_case": "ethtool_test",
+              "SubTests": [
+                {
+                  "sub_Test_Description": "Link not detected on eth0",
+                  "Reason": "Waiving Link not detected on eth0"
+                },
+                {
+                  "sub_Test_Description": "Self-test on eth0 (Result not found)",
+                  "Reason": "Waiving Self-test on eth0 (Result not found)"
+                }
+              ]
+            }
+          },
+          {
+            "TestCase": {
+              "Test_case": "capsule_update",
+              "SubTests": [
+                {
+                  "SubTestID": "1",
+                  "sub_Test_Description": "Testing signed_capsule.bin OD update",
+                  "Reason": "Waiving signed_capsule.bin not present"
+                },
+                {
+                  "sub_Test_Description": "ERROR check_file_contains: Could not find `EFI_SYSTEM_RESOURCE_TABLE:' in `/mnt/acs_results_template/acs_results/app_output/CapsuleApp_ESRT_table_info.log'",
+                  "Reason": "Waiving missing ESRT table in log"
+                }
+              ]
+            }
+          },
+          {
+            "TestCase": {
+              "Test_case": "dt_validate",
+              "SubTests": [
+                {
+                  "sub_Test_Description": "/home/root/fdt/fdt: pl061@9030000: $nodename:0: 'pl061@9030000' does not match '^gpio@[0-9a-f]+$'",
+                  "Reason": "Waiving FDT nodename mismatch error"
+                },
+                {
+                  "sub_Test_Description": "/home/root/fdt/fdt: pl061@9030000: 'interrupt-controller' is a required property",
+                  "Reason": "Waiving missing interrupt-controller property error"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
